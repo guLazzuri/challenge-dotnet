@@ -54,7 +54,7 @@ O MotoConnect é uma solução para gerenciamento completo de motocicletas, perm
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/seuusuario/seurepo.git
+   https://github.com/guLazzuri/challenge-dotnet.git
    ```
 
 2. **Configure a ConnectionString** no `appsettings.json` com suas credenciais Oracle:
