@@ -90,9 +90,9 @@ Program.cs            # Configuração de endpoints e serviços
 
 ## 👨‍💻 Desenvolvedores
 
-- **Mateus H. Souza** - RM: 558424
-- **Gustavo Lazzuri** - RM: 556772  
-- **Cauan Passos** - RM: 555466
+- **Gustavo Lazzuri** - RM: 556772 
+- **Eduardo Nagado** - RM: 558158 
+- **Felipe Silva** - RM: 555307
 
 ## 📄 Licença
 
