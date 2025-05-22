@@ -1,4 +1,4 @@
-# 🏍️ MotoConnect API - V 0.1.1 - CP 02
+# 🏍️ MotoConnect API - V 0.1.1 - Challenge
 
 > RESTful API desenvolvida em ASP.NET Core com integração ao Oracle Database, como parte do Challenge FIAP 2025.
 
