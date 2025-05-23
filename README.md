@@ -1,4 +1,4 @@
-# 🏍️ MotoConnect API - V 0.1.1 - Sistema de Gestão de Pátio Inteligente
+# 🏍️ GEF API - Sistema de Gestão de Pátio Inteligente
 
 > Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas, desenvolvido em ASP.NET Core com integração Oracle Database como parte do Challenge FIAP 2025.
 
