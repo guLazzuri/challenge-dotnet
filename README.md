@@ -180,11 +180,11 @@ O MotoConnect é uma solução tecnológica que visa modernizar e otimizar a ges
 
 ## 👨‍💻 Equipe de Desenvolvimento
 
-| Desenvolvedor | RM | Especialização |
-|---------------|-------|---------------|
-| **Gustavo Lazzuri** | 556772 | Backend & Database |
-| **Eduardo Nagado** | 558158 | API & Integração |
-| **Felipe Silva** | 555307 | Arquitetura & DevOps |
+| Desenvolvedor | RM |
+|---------------|-------|
+| **Gustavo Lazzuri** | 556772 |
+| **Eduardo Nagado** | 558158 |
+| **Felipe Silva** | 555307 |
 
 ## 📞 Suporte e Contato
 
