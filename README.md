@@ -74,6 +74,7 @@ O MotoConnect é uma solução tecnológica que visa modernizar e otimizar a ges
 | POST | `/api/MaintenanceHistories` | Criar novo registro de manutenção |
 | GET | `/api/MaintenanceHistories/{id}` | Detalhar registro específico |
 | PUT | `/api/MaintenanceHistories/{id}` | Atualizar registro de manutenção |
+| DELETE | `/api/MaintenanceHistories/{id}` | Remover registro de manutenção do sistema |
 
 
 ## 🏗️ Arquitetura e Tecnologias
