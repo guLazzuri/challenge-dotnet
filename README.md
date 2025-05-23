@@ -56,8 +56,7 @@ O MotoConnect é uma solução tecnológica que visa modernizar e otimizar a ges
 | GET | `/api/Vehicles/{id}` | Buscar motocicleta específica por ID |
 | PUT | `/api/Vehicles/{id}` | Atualizar informações e status da motocicleta |
 | DELETE | `/api/Vehicles/{id}` | Remover motocicleta do sistema |
-| GET | `/api/Vehicles/status/{status}` | Filtrar motocicletas por status operacional |
-| GET | `/api/Vehicles/location/{area}` | Buscar motocicletas por área do pátio |
+
 
 ### 👤 Users (Usuários)
 | Método | Endpoint | Descrição |
@@ -75,8 +74,7 @@ O MotoConnect é uma solução tecnológica que visa modernizar e otimizar a ges
 | POST | `/api/MaintenanceHistories` | Criar novo registro de manutenção |
 | GET | `/api/MaintenanceHistories/{id}` | Detalhar registro específico |
 | PUT | `/api/MaintenanceHistories/{id}` | Atualizar registro de manutenção |
-| DELETE | `/api/MaintenanceHistories/{id}` | Remover registro de manutenção |
-| GET | `/api/MaintenanceHistories/vehicle/{vehicleId}` | Histórico por motocicleta |
+
 
 ## 🏗️ Arquitetura e Tecnologias
 
@@ -92,7 +90,6 @@ O MotoConnect é uma solução tecnológica que visa modernizar e otimizar a ges
 ├── Vehicle.cs          # Entidade principal (moto + localização + status)
 ├── User.cs             # Usuários do sistema
 ├── MaintenanceHistory.cs # Histórico de manutenções
-└── Location.cs         # Coordenadas e áreas do pátio
 ```
 
 ### Padrões Implementados
