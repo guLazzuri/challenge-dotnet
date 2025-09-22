@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
+using challenge.Domain.DTOs;
+using challenge.Infrastructure.Services;
 
 namespace cp_02.Controllers
 {
@@ -10,54 +12,79 @@ namespace cp_02.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly ChallengeContext _context;
+        private readonly IHateoasService _hateoasService;
 
-        public VehiclesController(ChallengeContext context)
+        public VehiclesController(ChallengeContext context, IHateoasService hateoasService)
         {
             _context = context;
+            _hateoasService = hateoasService;
         }
 
         /// <summary>
-        /// Get all vehicles
+        /// Get all vehicles with pagination
         /// </summary>
-        /// <response code="200">Return all vehicles</response>
-        /// <response code="404">No vehicles found</response>
+        /// <param name="pageNumber">Número da página (padrão: 1)</param>
+        /// <param name="pageSize">Tamanho da página (padrão: 10, máximo: 100)</param>
+        /// <response code="200">Return paginated vehicles</response>
+        /// <response code="400">Invalid pagination parameters</response>
         /// <response code="500">Internal server error</response>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehicles()
+        [HttpGet(Name = "GetVehicles")]
+        public async Task<ActionResult<PagedResult<Vehicle>>> GetVehicles(
+            [FromQuery] int pageNumber = 1, 
+            [FromQuery] int pageSize = 10)
         {
-            return await _context.Vehicles.ToListAsync();
+            var pagingParams = new PagingParameters { PageNumber = pageNumber, PageSize = pageSize };
+            
+            var totalItems = await _context.Vehicles.CountAsync();
+            var vehicles = await _context.Vehicles
+                .Skip((pagingParams.PageNumber - 1) * pagingParams.PageSize)
+                .Take(pagingParams.PageSize)
+                .ToListAsync();
+
+            var result = new PagedResult<Vehicle>
+            {
+                Items = vehicles,
+                CurrentPage = pagingParams.PageNumber,
+                PageSize = pagingParams.PageSize,
+                TotalItems = totalItems
+            };
+
+            // Adicionar links HATEOAS
+            result.Links = _hateoasService.GeneratePaginationLinks(result, "Vehicle", Url);
+
+            return Ok(result);
         }
 
-        // GET: api/Vehicles/5
         /// <summary>
-        /// Get all vehicles
+        /// Get a specific vehicle by ID
         /// </summary>
-        /// <response code="200">Return all vehicles</response>
-        /// <response code="404">No vehicles found</response>
+        /// <param name="id">ID do veículo</param>
+        /// <response code="200">Return the vehicle</response>
+        /// <response code="404">Vehicle not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetVehicle")]
         public async Task<ActionResult<Vehicle>> GetVehicle(Guid id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
 
             if (vehicle == null)
             {
-                return NotFound();
+                return NotFound(new { error = "Veículo não encontrado", vehicleId = id });
             }
 
-            return vehicle;
+            return Ok(vehicle);
         }
 
-        // PUT: api/Vehicles/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
-        /// Get all vehicles
+        /// Update an existing vehicle
         /// </summary>
-        /// <response code="204">Vehicle  updated</response>
+        /// <param name="id">ID do veículo</param>
+        /// <param name="vehicle">Dados do veículo para atualização</param>
+        /// <response code="204">Vehicle updated successfully</response>
         /// <response code="400">Invalid request</response>
-        /// <response code="404">No vehicles found</response>
+        /// <response code="404">Vehicle not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "UpdateVehicle")]
         public async Task<IActionResult> PutVehicle(Guid id, [FromBody] Vehicle vehicle)
         {
             if (!ModelState.IsValid)
@@ -118,16 +145,14 @@ namespace cp_02.Controllers
 
             return NoContent();
         }
-        // POST: api/Vehicles
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
-        /// Get all vehicles
+        /// Create a new vehicle
         /// </summary>
+        /// <param name="vehicle">Dados do veículo para criação</param>
         /// <response code="201">Vehicle created successfully</response>
         /// <response code="400">Invalid request</response>
-        /// <response code="404">No vehicles found</response>
         /// <response code="500">Internal server error</response>
-        [HttpPost]
+        [HttpPost(Name = "CreateVehicle")]
         public async Task<ActionResult<Vehicle>> PostVehicle(Vehicle vehicle)
         {
             _context.Vehicles.Add(vehicle);
@@ -136,14 +161,14 @@ namespace cp_02.Controllers
             return CreatedAtAction("GetVehicle", new { id = vehicle.VehicleId }, vehicle);
         }
 
-        // DELETE: api/Vehicles/5
         /// <summary>
-        /// Get all vehicles
+        /// Delete a vehicle
         /// </summary>
+        /// <param name="id">ID do veículo</param>
         /// <response code="204">Vehicle successfully removed</response>
-        /// <response code="404">No vehicles found</response>
+        /// <response code="404">Vehicle not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteVehicle")]
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);

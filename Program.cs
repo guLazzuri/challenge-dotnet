@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using challenge.Infrastructure.Context;
 using challenge.Domain.Entity;
+using challenge.Infrastructure.Services;
 namespace Challenge
 {
     public class Program
@@ -33,18 +34,63 @@ namespace Challenge
                 x.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = builder.Configuration["Swagger:Title"],
-                    Description = "Challenge Mottu",
-                    Contact = new OpenApiContact() { Name = "Gustavo", Email = "gulazzuri@gmail.com" }
+                    Description = @"
+                        ## 🏍️ GEF API - Sistema de Gestão de Pátio Inteligente
+                        
+                        Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas.
+                        
+                        ### 🚀 Funcionalidades:
+                        - ✅ **Paginação**: Todos os endpoints GET suportam paginação
+                        - ✅ **HATEOAS**: Links de navegação automáticos
+                        - ✅ **Validação**: Validação robusta de dados
+                        - ✅ **Status Codes**: Códigos HTTP adequados
+                        
+                        ### 📋 Entidades:
+                        - **Vehicles**: Gestão de motocicletas
+                        - **Users**: Gestão de usuários do sistema  
+                        - **MaintenanceHistories**: Histórico de manutenções
+                        
+                        ### 🔗 Exemplos de Uso:
+                        ```
+                        GET /api/Vehicles?pageNumber=1&pageSize=10
+                        POST /api/Vehicles (com body JSON)
+                        ```
+                    ",
+                    Version = "v1",
+                    Contact = new OpenApiContact() 
+                    { 
+                        Name = "Gustavo Lazzuri", 
+                        Email = "gulazzuri@gmail.com",
+                        Url = new Uri("https://github.com/guLazzuri/challenge-dotnet")
+                    }
                 });
 
-
+                // Incluir comentários XML
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"; 
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-                //incluir os comentarios no SWAGGER
                 x.IncludeXmlComments(xmlPath);
 
+                // Adicionar esquemas de exemplo
+                x.MapType<VehicleModel>(() => new Microsoft.OpenApi.Models.OpenApiSchema
+                {
+                    Type = "string",
+                    Enum = new List<Microsoft.OpenApi.Any.IOpenApiAny>
+                    {
+                        new Microsoft.OpenApi.Any.OpenApiString("E"),
+                        new Microsoft.OpenApi.Any.OpenApiString("SPORT"),
+                        new Microsoft.OpenApi.Any.OpenApiString("POP")
+                    }
+                });
 
+                x.MapType<UserType>(() => new Microsoft.OpenApi.Models.OpenApiSchema
+                {
+                    Type = "string",
+                    Enum = new List<Microsoft.OpenApi.Any.IOpenApiAny>
+                    {
+                        new Microsoft.OpenApi.Any.OpenApiString("ADMIN"),
+                        new Microsoft.OpenApi.Any.OpenApiString("CLIENT")
+                    }
+                });
             });
 
             builder.Services.AddDbContext<ChallengeContext>(options =>
@@ -52,10 +98,13 @@ namespace Challenge
                 options.UseOracle(builder.Configuration.GetConnectionString("Oracle"));
             });
 
+            // Repository Pattern
             builder.Services.AddScoped<IRepository<Vehicle>, Repository<Vehicle>>();
-            /*ADICIONAR DEMAIS CLASSES*/
-            /*builder.Services.AddScoped<IRepository<Customer>, Repository<Customer>>();
-            builder.Services.AddScoped<IRepository<Order>, Repository<Order>>();*/
+            builder.Services.AddScoped<IRepository<User>, Repository<User>>();
+            builder.Services.AddScoped<IRepository<MaintenanceHistory>, Repository<MaintenanceHistory>>();
+
+            // HATEOAS Service
+            builder.Services.AddScoped<IHateoasService, HateoasService>();
 
 
             var app = builder.Build();

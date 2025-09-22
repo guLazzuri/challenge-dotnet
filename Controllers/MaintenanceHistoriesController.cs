@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
+using challenge.Domain.DTOs;
+using challenge.Infrastructure.Services;
 
 namespace challenge.Controllers
 {
@@ -10,55 +12,79 @@ namespace challenge.Controllers
     public class MaintenanceHistoriesController : ControllerBase
     {
         private readonly ChallengeContext _context;
+        private readonly IHateoasService _hateoasService;
 
-        public MaintenanceHistoriesController(ChallengeContext context)
+        public MaintenanceHistoriesController(ChallengeContext context, IHateoasService hateoasService)
         {
             _context = context;
+            _hateoasService = hateoasService;
         }
 
-        // GET: api/maintenancehistories
         /// <summary>
-        /// Get all maintenance histories
+        /// Get all maintenance histories with pagination
         /// </summary>
-        /// <response code="200">Return all maintenance history</response>
-        /// <response code="404">No Maintenance History Found</response>
+        /// <param name="pageNumber">Número da página (padrão: 1)</param>
+        /// <param name="pageSize">Tamanho da página (padrão: 10, máximo: 100)</param>
+        /// <response code="200">Return paginated maintenance histories</response>
+        /// <response code="400">Invalid pagination parameters</response>
         /// <response code="500">Internal server error</response>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<MaintenanceHistory>>> GetMaintenanceHistory()
+        [HttpGet(Name = "GetMaintenanceHistories")]
+        public async Task<ActionResult<PagedResult<MaintenanceHistory>>> GetMaintenanceHistories(
+            [FromQuery] int pageNumber = 1, 
+            [FromQuery] int pageSize = 10)
         {
-            return await _context.MaintenanceHistories.ToListAsync();
+            var pagingParams = new PagingParameters { PageNumber = pageNumber, PageSize = pageSize };
+            
+            var totalItems = await _context.MaintenanceHistories.CountAsync();
+            var maintenanceHistories = await _context.MaintenanceHistories
+                .Skip((pagingParams.PageNumber - 1) * pagingParams.PageSize)
+                .Take(pagingParams.PageSize)
+                .ToListAsync();
+
+            var result = new PagedResult<MaintenanceHistory>
+            {
+                Items = maintenanceHistories,
+                CurrentPage = pagingParams.PageNumber,
+                PageSize = pagingParams.PageSize,
+                TotalItems = totalItems
+            };
+
+            // Adicionar links HATEOAS
+            result.Links = _hateoasService.GeneratePaginationLinks(result, "MaintenanceHistory", Url);
+
+            return Ok(result);
         }
 
-        // GET: api/MaintenanceHistories/5
         /// <summary>
-        /// Get all maintenance histories
+        /// Get a specific maintenance history by ID
         /// </summary>
-        /// <response code="200">Return all maintenance history</response>
-        /// <response code="404">No Maintenance History Found</response>
+        /// <param name="id">ID do histórico de manutenção</param>
+        /// <response code="200">Return the maintenance history</response>
+        /// <response code="404">Maintenance history not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetMaintenanceHistory")]
         public async Task<ActionResult<MaintenanceHistory>> GetMaintenanceHistory(Guid id)
         {
             var maintenanceHistory = await _context.MaintenanceHistories.FindAsync(id);
 
             if (maintenanceHistory == null)
             {
-                return NotFound();
+                return NotFound(new { error = "Histórico de manutenção não encontrado", maintenanceHistoryId = id });
             }
 
-            return maintenanceHistory;
+            return Ok(maintenanceHistory);
         }
 
-        // PUT: api/MaintenanceHistories/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
-        /// Get all maintenance histories
+        /// Update an existing maintenance history
         /// </summary>
-        /// <response code="204">Maintenance history successfully updated</response>
+        /// <param name="id">ID do histórico de manutenção</param>
+        /// <param name="maintenanceHistory">Dados do histórico para atualização</param>
+        /// <response code="204">Maintenance history updated successfully</response>
         /// <response code="400">Invalid request</response>
         /// <response code="404">Maintenance history not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "UpdateMaintenanceHistory")]
         public async Task<IActionResult> PutMaintenanceHistory(Guid id, MaintenanceHistory maintenanceHistory)
         {
             if (id != maintenanceHistory.MaintenanceHistoryID)
@@ -87,16 +113,14 @@ namespace challenge.Controllers
             return NoContent();
         }
 
-        // POST: api/MaintenanceHistories
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
-        /// Get all maintenance histories
+        /// Create a new maintenance history
         /// </summary>
+        /// <param name="maintenanceHistory">Dados do histórico para criação</param>
         /// <response code="201">Maintenance history created successfully</response>
         /// <response code="400">Invalid request</response>
-        /// <response code="404">Maintenance history not found</response>
-        /// <response code="500">Erro interno do servidor</response>
-        [HttpPost]
+        /// <response code="500">Internal server error</response>
+        [HttpPost(Name = "CreateMaintenanceHistory")]
         public async Task<ActionResult<MaintenanceHistory>> PostMaintenanceHistory(MaintenanceHistory maintenanceHistory)
         {
             _context.MaintenanceHistories.Add(maintenanceHistory);
@@ -105,14 +129,14 @@ namespace challenge.Controllers
             return CreatedAtAction("GetMaintenanceHistory", new { id = maintenanceHistory.MaintenanceHistoryID }, maintenanceHistory);
         }
 
-        // DELETE: api/MaintenanceHistories/5
         /// <summary>
-        /// Get all maintenance histories
+        /// Delete a maintenance history
         /// </summary>
+        /// <param name="id">ID do histórico de manutenção</param>
         /// <response code="204">Maintenance history successfully removed</response>
         /// <response code="404">Maintenance history not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteMaintenanceHistory")]
         public async Task<IActionResult> DeleteMaintenanceHistory(Guid id)
         {
             var maintenanceHistory = await _context.MaintenanceHistories.FindAsync(id);

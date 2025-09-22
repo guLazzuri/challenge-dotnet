@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
+using challenge.Domain.DTOs;
+using challenge.Infrastructure.Services;
 
 namespace challenge.Controllers
 {
@@ -10,55 +12,79 @@ namespace challenge.Controllers
     public class UserController : ControllerBase
     {
         private readonly ChallengeContext _context;
+        private readonly IHateoasService _hateoasService;
 
-        public UserController(ChallengeContext context)
+        public UserController(ChallengeContext context, IHateoasService hateoasService)
         {
             _context = context;
+            _hateoasService = hateoasService;
         }
 
-        // GET: api/user
         /// <summary>
-        /// Get all users
+        /// Get all users with pagination
         /// </summary>
-        /// <response code="200">Return all users</response>
-        /// <response code="404">No User Found</response>
+        /// <param name="pageNumber">Número da página (padrão: 1)</param>
+        /// <param name="pageSize">Tamanho da página (padrão: 10, máximo: 100)</param>
+        /// <response code="200">Return paginated users</response>
+        /// <response code="400">Invalid pagination parameters</response>
         /// <response code="500">Internal server error</response>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUser()
+        [HttpGet(Name = "GetUsers")]
+        public async Task<ActionResult<PagedResult<User>>> GetUsers(
+            [FromQuery] int pageNumber = 1, 
+            [FromQuery] int pageSize = 10)
         {
-            return await _context.Users.ToListAsync();
+            var pagingParams = new PagingParameters { PageNumber = pageNumber, PageSize = pageSize };
+            
+            var totalItems = await _context.Users.CountAsync();
+            var users = await _context.Users
+                .Skip((pagingParams.PageNumber - 1) * pagingParams.PageSize)
+                .Take(pagingParams.PageSize)
+                .ToListAsync();
+
+            var result = new PagedResult<User>
+            {
+                Items = users,
+                CurrentPage = pagingParams.PageNumber,
+                PageSize = pagingParams.PageSize,
+                TotalItems = totalItems
+            };
+
+            // Adicionar links HATEOAS
+            result.Links = _hateoasService.GeneratePaginationLinks(result, "User", Url);
+
+            return Ok(result);
         }
 
-        // GET: api/Users/5
         /// <summary>
-        /// Get all users
+        /// Get a specific user by ID
         /// </summary>
-        /// <response code="200">Return all users</response>
-        /// <response code="404">No User Found</response>
+        /// <param name="id">ID do usuário</param>
+        /// <response code="200">Return the user</response>
+        /// <response code="404">User not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetUser")]
         public async Task<ActionResult<User>> GetUser(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
 
             if (user == null)
             {
-                return NotFound();
+                return NotFound(new { error = "Usuário não encontrado", userId = id });
             }
 
-            return user;
+            return Ok(user);
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
-        /// Get all users
+        /// Update an existing user
         /// </summary>
-        /// <response code="204">User successfully updated</response>
+        /// <param name="id">ID do usuário</param>
+        /// <param name="user">Dados do usuário para atualização</param>
+        /// <response code="204">User updated successfully</response>
         /// <response code="400">Invalid request</response>
-        /// <response code="404">No User Found</response>
+        /// <response code="404">User not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "UpdateUser")]
         public async Task<IActionResult> PutUser(Guid id, User user)
         {
             if (id != user.UserID)
@@ -87,16 +113,14 @@ namespace challenge.Controllers
             return NoContent();
         }
 
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
-        /// Get all users
+        /// Create a new user
         /// </summary>
+        /// <param name="user">Dados do usuário para criação</param>
         /// <response code="201">User created successfully</response>
         /// <response code="400">Invalid request</response>
-        /// <response code="404">No User Found</response>
         /// <response code="500">Internal server error</response>
-        [HttpPost]
+        [HttpPost(Name = "CreateUser")]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
@@ -105,14 +129,14 @@ namespace challenge.Controllers
             return CreatedAtAction("GetUser", new { id = user.UserID }, user);
         }
 
-        // DELETE: api/Users/5
         /// <summary>
-        /// Get all users
+        /// Delete a user
         /// </summary>
+        /// <param name="id">ID do usuário</param>
         /// <response code="204">User successfully removed</response>
-        /// <response code="404">No User Found</response>
+        /// <response code="404">User not found</response>
         /// <response code="500">Internal server error</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteUser")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
