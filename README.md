@@ -2,10 +2,6 @@
 
 > API RESTful completa para gerenciamento inteligente de usuários, veículos e históricos de manutenção, desenvolvida em ASP.NET Core 8 com arquitetura em camadas e boas práticas.
 
-[![.NET Core](https://img.shields.io/badge/.NET%20Core-8.0-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/)
-[![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)](https://www.microsoft.com/sql-server)
-[![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black)](https://swagger.io/)
-
 ## 📋 Visão Geral
 
 O **Challenge .NET** é uma solução tecnológica robusta que oferece controle completo sobre gestão de frotas e manutenções de veículos. Desenvolvido com foco em escalabilidade e manutenibilidade, o sistema implementa padrões modernos de arquitetura, incluindo Repository Pattern, DTOs, HATEOAS e separação clara de responsabilidades em camadas.
@@ -154,6 +150,67 @@ challenge-dotnet/
 - **Clean Architecture**: Separação clara de responsabilidades
 - **Code First Migrations**: Controle de versão do banco de dados
 
+## 🏛️ Justificativa da Arquitetura
+
+### Arquitetura em Camadas
+
+O projeto foi estruturado seguindo os princípios da **Clean Architecture** com separação em três camadas principais:
+
+#### 1️⃣ **Camada de Apresentação (Controllers)**
+- **Responsabilidade**: Receber requisições HTTP, validar entrada e retornar respostas
+- **Justificativa**: Isola a lógica de comunicação HTTP do restante da aplicação, facilitando mudanças na interface sem afetar a lógica de negócio
+- **Benefício**: Permite trocar o framework web (ex: de ASP.NET para outra tecnologia) sem impactar outras camadas
+
+#### 2️⃣ **Camada de Domínio (Domain)**
+- **Responsabilidade**: Contém as entidades, DTOs, interfaces e regras de negócio
+- **Justificativa**: Centraliza toda a lógica de negócio e modelos de dados, mantendo-os independentes de frameworks externos
+- **Benefício**: Facilita testes unitários e garante que as regras de negócio sejam reutilizáveis
+
+#### 3️⃣ **Camada de Infraestrutura (Infrastructure)**
+- **Responsabilidade**: Implementa acesso a dados, serviços externos e configurações de persistência
+- **Justificativa**: Separa detalhes técnicos (banco de dados, APIs externas) da lógica de negócio
+- **Benefício**: Permite trocar o banco de dados (ex: SQL Server para Oracle) alterando apenas esta camada
+
+### Padrões de Projeto Adotados
+
+#### **Repository Pattern**
+- **Por quê**: Abstrai a lógica de acesso a dados, tornando o código mais testável e desacoplado
+- **Vantagem**: Facilita a criação de testes unitários mockando repositórios
+- **Implementação**: Interface `IRepository<T>` genérica com implementação concreta
+
+#### **DTO (Data Transfer Objects)**
+- **Por quê**: Evita exposição direta das entidades de domínio nas APIs
+- **Vantagem**: Controla exatamente quais dados são enviados/recebidos, melhorando segurança
+- **Implementação**: DTOs específicos para cada operação (UserDto, VehicleDto, etc.)
+
+#### **Dependency Injection**
+- **Por quê**: Promove baixo acoplamento e facilita testes
+- **Vantagem**: Permite substituir implementações facilmente (ex: trocar repositório real por mock em testes)
+- **Implementação**: Injeção nativa do ASP.NET Core via `IServiceCollection`
+
+#### **HATEOAS (Hypermedia as the Engine of Application State)**
+- **Por quê**: Torna a API auto-descritiva, guiando o cliente através de links
+- **Vantagem**: Cliente não precisa conhecer URLs fixas, apenas seguir links fornecidos
+- **Implementação**: `HateoasService` adiciona links relevantes em cada resposta
+
+### Decisões Técnicas
+
+| Decisão | Justificativa |
+|---------|---------------|
+| **Entity Framework Core** | ORM maduro, bem documentado, com suporte robusto a migrações e LINQ |
+| **SQL Server** | Banco robusto, escalável e com ótima integração com .NET |
+| **Swagger/OpenAPI** | Documentação automática, facilita testes e integração com frontend |
+| **Code First Migrations** | Controle de versão do schema do banco via código, facilitando deploys |
+
+### Escalabilidade e Manutenibilidade
+
+A arquitetura escolhida permite:
+- ✅ **Adicionar novos endpoints** sem impactar código existente
+- ✅ **Trocar tecnologias** (banco de dados, framework) com mínimo impacto
+- ✅ **Escrever testes** facilmente devido ao baixo acoplamento
+- ✅ **Trabalhar em equipe** com responsabilidades bem definidas por camada
+- ✅ **Evoluir gradualmente** adicionando features sem refatorações massivas
+
 ## ⚙️ Instalação e Configuração
 
 ### Pré-requisitos
@@ -281,32 +338,49 @@ curl -X GET "https://localhost:5001/api/vehicles?page=1&pageSize=10"
 curl -X GET https://localhost:5001/api/maintenancehistories/vehicle/1
 ```
 
-## 📈 Roadmap e Melhorias Futuras
+## 🧪 Testes
 
-### Fase 1 (Atual) - Fundação
-- ✅ API RESTful completa
-- ✅ CRUD de usuários, veículos e manutenções
-- ✅ Paginação e filtros
-- ✅ Documentação Swagger
-- ✅ Arquitetura em camadas
+### Executando os Testes
 
-### Fase 2 - Melhorias de Segurança
-- 🔄 Autenticação JWT
-- 🔄 Autorização baseada em roles
-- 🔄 Criptografia de dados sensíveis
-- 🔄 Rate limiting
+Para executar todos os testes do projeto:
 
-### Fase 3 - Features Avançadas
-- 📋 Notificações de manutenções programadas
-- 📋 Dashboard com métricas e analytics
-- 📋 Exportação de relatórios (PDF, Excel)
-- 📋 Integração com APIs de terceiros
+```bash
+dotnet test
+```
 
-### Fase 4 - Expansão
-- 📋 App mobile (React Native / Flutter)
-- 📋 Sistema de agendamento
-- 📋 Integração IoT para telemetria
-- 📋 Machine Learning para previsão de manutenções
+### Executar testes com cobertura detalhada:
+
+```bash
+dotnet test --logger "console;verbosity=detailed"
+```
+
+### Executar testes de uma classe específica:
+
+```bash
+dotnet test --filter "FullyQualifiedName~UserControllerTests"
+```
+
+### Gerar relatório de cobertura de código:
+
+```bash
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+```
+
+### Estrutura de Testes
+
+```
+📁 Tests/
+├── UnitTests/                    # Testes unitários
+│   ├── Controllers/              # Testes dos controllers
+│   ├── Services/                 # Testes dos serviços
+│   └── Repositories/             # Testes dos repositórios
+│
+└── IntegrationTests/             # Testes de integração
+    ├── API/                      # Testes end-to-end da API
+    └── Database/                 # Testes de persistência
+```
+
+*Nota: Certifique-se de ter o projeto de testes configurado antes de executar os comandos acima.*
 
 ## 📊 Benefícios e Ganhos
 
@@ -354,7 +428,7 @@ Contribuições são sempre bem-vindas! Para contribuir com o projeto:
 Para dúvidas técnicas, sugestões ou relatos de bugs:
 - **Issues**: [GitHub Issues](https://github.com/seu-usuario/challenge-dotnet/issues)
 - **Documentação**: Swagger UI integrada no projeto
-- **Email**: contato@exemplo.com
+- **Email**: gulazzuri@gmail.com
 
 ## 📄 Licença
 
