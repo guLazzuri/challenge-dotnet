@@ -38,23 +38,6 @@ namespace Challenge
                         ## 🏍️ GEF API - Sistema de Gestão de Pátio Inteligente
                         
                         Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas.
-                        
-                        ### 🚀 Funcionalidades:
-                        - ✅ **Paginação**: Todos os endpoints GET suportam paginação
-                        - ✅ **HATEOAS**: Links de navegação automáticos
-                        - ✅ **Validação**: Validação robusta de dados
-                        - ✅ **Status Codes**: Códigos HTTP adequados
-                        
-                        ### 📋 Entidades:
-                        - **Vehicles**: Gestão de motocicletas
-                        - **Users**: Gestão de usuários do sistema  
-                        - **MaintenanceHistories**: Histórico de manutenções
-                        
-                        ### 🔗 Exemplos de Uso:
-                        ```
-                        GET /api/Vehicles?pageNumber=1&pageSize=10
-                        POST /api/Vehicles (com body JSON)
-                        ```
                     ",
                     Version = "v1",
                     Contact = new OpenApiContact() 
