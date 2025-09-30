@@ -1,202 +1,315 @@
-# 🏍️ GEF API - Sistema de Gestão de Pátio Inteligente
+# Challenge .NET - API de Gerenciamento de Veículos e Manutenção
 
-> Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas, desenvolvido em ASP.NET Core com integração Oracle Database como parte do Challenge FIAP 2025.
+Uma API RESTful completa desenvolvida em .NET 8 para gerenciar usuários, veículos e seus históricos de manutenção, implementando boas práticas de arquitetura em camadas e padrões HATEOAS.
 
-[![.NET Core](https://img.shields.io/badge/.NET%20Core-8.0-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/)
-[![Oracle](https://img.shields.io/badge/Oracle-F80000?style=flat-square&logo=oracle&logoColor=white)](https://www.oracle.com/)
-[![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black)](https://swagger.io/)
+## 📋 Índice
 
-## 📋 Visão Geral
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Funcionalidades](#funcionalidades)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação e Configuração](#instalação-e-configuração)
+- [Executando o Projeto](#executando-o-projeto)
+- [Endpoints da API](#endpoints-da-api)
+- [Exemplos de Uso](#exemplos-de-uso)
+- [Contribuindo](#contribuindo)
+- [Licença](#licença)
 
-O MotoConnect é uma solução tecnológica que visa modernizar e otimizar a gestão de pátios de motocicletas, substituindo processos manuais por um sistema digital inteligente. A plataforma oferece controle total sobre a localização, status e histórico de veículos, proporcionando eficiência operacional e tomada de decisões baseada em dados.
+## 🎯 Sobre o Projeto
 
-### 🎯 Problemas Solucionados
+O **Challenge .NET** é uma API robusta que oferece uma solução completa para gestão de frotas e manutenções de veículos. O sistema permite cadastrar usuários, registrar veículos e acompanhar todo o histórico de manutenções realizadas, facilitando o controle e organização de oficinas mecânicas, empresas de logística ou frotas corporativas.
 
-- **Localização Manual Ineficiente**: Elimina a busca demorada por motocicletas específicas no pátio
-- **Desorganização Espacial**: Implementa padronização na disposição e categorização dos veículos
-- **Falta de Rastreabilidade**: Fornece histórico completo e análises sobre ocupação e movimentação
-- **Ausência de Integração Tecnológica**: Prepara base para futuras automações com IoT e QR Codes
+### Principais Diferenciais
 
-### 🚀 Objetivos da Solução
+- Arquitetura em camadas bem definida (Controllers, Domain, Infrastructure)
+- Implementação de HATEOAS para APIs auto-descritivas
+- Padrão Repository para abstração de acesso a dados
+- Entity Framework Core com Code First Migrations
+- DTOs para transferência segura de dados
+- Suporte a paginação de resultados
 
-- **Mapeamento Digital**: Planta virtual do pátio com posicionamento em tempo real das motocicletas
-- **Categorização Inteligente**: Status operacional claro (manutenção, liberada, defeito, vistoria)
-- **Interface Moderna**: Dashboard web responsivo acessível em qualquer dispositivo
-- **Escalabilidade**: Arquitetura preparada para integração com sensores IoT e automação
+## ✨ Funcionalidades
 
-## 🔧 Funcionalidades Principais
+### Gestão de Usuários
+- Cadastro, consulta, atualização e remoção de usuários
+- Suporte a diferentes tipos de usuário
+- Validação de dados de entrada
 
-### 📍 Gestão de Localização
-- Mapeamento visual do pátio com posicionamento exato das motos
-- Sistema de coordenadas para localização precisa
-- Busca rápida por placa, código ou posição
+### Gestão de Veículos
+- Registro completo de veículos
+- Associação de veículos a usuários
+- Gerenciamento de modelos de veículos
+- Consultas com paginação
 
-### 🏷️ Controle de Status
-- Categorização por status operacional
-- Triagem visual com cores e indicadores
-- Histórico completo de mudanças de status
+### Histórico de Manutenções
+- Registro detalhado de manutenções realizadas
+- Vinculação de manutenções a veículos específicos
+- Consulta histórica com filtros
+- Possibilidade de cancelamento de registros
+- Timeline completa de manutenções por veículo
 
-### 📊 Relatórios e Analytics
-- Análise de ocupação do pátio
-- Relatórios de movimentação histórica
-- Indicadores de performance operacional
+## 🚀 Tecnologias Utilizadas
 
-### 🔄 Integração Futura
-- Preparação para leitura de QR Codes
-- Arquitetura IoT-ready para sensores automáticos
-- API extensível para integrações externas
+- **.NET 8** - Framework principal
+- **ASP.NET Core** - Framework web
+- **Entity Framework Core** - ORM para acesso a dados
+- **SQL Server** - Banco de dados relacional
+- **C#** - Linguagem de programação
+- **HATEOAS** - Padrão de API REST
+- **Bootstrap 5** - Framework CSS (frontend)
+- **jQuery** - Biblioteca JavaScript
+- **Swagger/OpenAPI** - Documentação de API
 
-## 🔗 Endpoints da API
+## 📁 Estrutura do Projeto
 
-### 🏍️ Vehicles (Motocicletas)
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/api/Vehicles` | Listar todas as motocicletas com status e localização |
-| POST | `/api/Vehicles` | Cadastrar nova motocicleta no sistema |
-| GET | `/api/Vehicles/{id}` | Buscar motocicleta específica por ID |
-| PUT | `/api/Vehicles/{id}` | Atualizar informações e status da motocicleta |
-| DELETE | `/api/Vehicles/{id}` | Remover motocicleta do sistema |
-
-
-### 👤 Users (Usuários)
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/api/User` | Listar usuários do sistema |
-| POST | `/api/User` | Criar novo usuário |
-| GET | `/api/User/{id}` | Buscar usuário específico |
-| PUT | `/api/User/{id}` | Atualizar dados do usuário |
-| DELETE | `/api/User/{id}` | Remover usuário do sistema |
-
-### 🛠️ MaintenanceHistories (Histórico de Manutenção)
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| GET | `/api/MaintenanceHistories` | Listar todos os registros de manutenção |
-| POST | `/api/MaintenanceHistories` | Criar novo registro de manutenção |
-| GET | `/api/MaintenanceHistories/{id}` | Detalhar registro específico |
-| PUT | `/api/MaintenanceHistories/{id}` | Atualizar registro de manutenção |
-| DELETE | `/api/MaintenanceHistories/{id}` | Remover registro de manutenção do sistema |
-
-
-## 🏗️ Arquitetura e Tecnologias
-
-### Backend
-- **ASP.NET Core 8**: Framework principal para desenvolvimento da API
-- **Oracle Database**: Banco de dados robusto para armazenamento empresarial
-- **Entity Framework Core**: ORM para mapeamento objeto-relacional
-- **Swagger/OpenAPI**: Documentação automática da API
-
-### Estrutura de Dados
 ```
-📁 Models/
-├── Vehicle.cs          # Entidade principal (moto + localização + status)
-├── User.cs             # Usuários do sistema
-├── MaintenanceHistory.cs # Histórico de manutenções
+challenge-dotnet/
+│
+├── Controllers/                          # Camada de apresentação
+│   ├── MaintenanceHistoriesController.cs # Endpoints de histórico
+│   ├── UserController.cs                 # Endpoints de usuários
+│   └── VehiclesController.cs             # Endpoints de veículos
+│
+├── Domain/                               # Camada de domínio
+│   ├── DTOs/                             # Data Transfer Objects
+│   │   ├── LinkDto.cs                    # Links HATEOAS
+│   │   ├── MaintenanceHistoryDto.cs      # DTO de manutenção
+│   │   ├── PagedResult.cs                # Resultado paginado
+│   │   ├── UserDto.cs                    # DTO de usuário
+│   │   └── VehicleDto.cs                 # DTO de veículo
+│   │
+│   ├── Entity/                           # Entidades do domínio
+│   │   ├── MaintenanceHistory.cs         # Entidade de histórico
+│   │   ├── User.cs                       # Entidade de usuário
+│   │   ├── UserType.cs                   # Enum de tipo de usuário
+│   │   ├── Vehicle.cs                    # Entidade de veículo
+│   │   └── VehicleModel.cs               # Modelo de veículo
+│   │
+│   └── Interfaces/                       # Contratos do domínio
+│       └── ICancel.cs                    # Interface de cancelamento
+│
+├── Infrastructure/                       # Camada de infraestrutura
+│   ├── Context/                          # Contexto do banco
+│   │   └── ChallengeContext.cs           # DbContext principal
+│   │
+│   ├── Mappings/                         # Configurações EF Core
+│   │   ├── MaintenanceHistoryMapping.cs  # Mapeamento de histórico
+│   │   ├── UserMapping.cs                # Mapeamento de usuário
+│   │   └── VehicleMapping.cs             # Mapeamento de veículo
+│   │
+│   ├── Persistence/Repositories/         # Acesso a dados
+│   │   ├── IRepository.cs                # Interface genérica
+│   │   └── Repository.cs                 # Implementação genérica
+│   │
+│   └── Services/                         # Serviços de infraestrutura
+│       └── HateoasService.cs             # Serviço de links HATEOAS
+│
+├── Migrations/                           # Migrações do banco de dados
+│
+├── wwwroot/                              # Arquivos estáticos
+│   ├── css/                              # Estilos CSS
+│   ├── js/                               # Scripts JavaScript
+│   └── lib/                              # Bibliotecas (Bootstrap, jQuery)
+│
+├── appsettings.json                      # Configurações gerais
+├── appsettings.Development.json          # Configurações de desenvolvimento
+├── launchSettings.json                   # Configurações de execução
+└── Program.cs                            # Ponto de entrada da aplicação
 ```
 
-### Padrões Implementados
-- **Repository Pattern**: Abstração de acesso a dados
-- **Dependency Injection**: Inversão de controle nativa do .NET
-- **RESTful API**: Arquitetura REST para comunicação
-- **Clean Architecture**: Separação clara de responsabilidades
+## 📋 Pré-requisitos
+
+Antes de começar, certifique-se de ter instalado:
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) ou superior
+- [SQL Server](https://www.microsoft.com/sql-server/sql-server-downloads) (Express ou Developer Edition)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) ou [Visual Studio Code](https://code.visualstudio.com/)
+- [Git](https://git-scm.com/) para controle de versão
 
 ## ⚙️ Instalação e Configuração
 
-### Pré-requisitos
-- .NET 8.0 SDK
-- Oracle Database (local ou cloud)
-- Visual Studio 2022 ou VS Code
+### 1. Clone o Repositório
 
-### Passos de Instalação
+```bash
+git clone https://github.com/seu-usuario/challenge-dotnet.git
+cd challenge-dotnet
+```
 
-1. **Clone o repositório**
-   ```bash
-   git clone https://github.com/guLazzuri/challenge-dotnet.git
-   cd challenge-dotnet
-   ```
+### 2. Configure a String de Conexão
 
-2. **Configure a conexão Oracle**
-   ```json
-   {
-     "ConnectionStrings": {
-       "DefaultConnection": "User Id=seu_usuario;Password=sua_senha;Data Source=seu_datasource;"
-     }
-   }
-   ```
+Edite o arquivo `appsettings.json` e configure a conexão com seu banco de dados:
 
-3. **Execute as migrações**
-   ```bash
-   dotnet ef database update
-   ```
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=ChallengeDB;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
+```
 
-4. **Inicie a aplicação**
-   ```bash
-   dotnet restore
-   dotnet build
-   dotnet run
-   ```
+Para ambientes de desenvolvimento, você também pode editar `appsettings.Development.json`.
 
-5. **Acesse a documentação**
-   ```
-   https://localhost:5214/swagger
-   ```
+### 3. Restaure as Dependências
 
-## 📈 Roadmap de Evolução
+```bash
+dotnet restore
+```
 
-### Fase 1 (Atual) - Fundação Digital
-- ✅ API RESTful completa
-- ✅ Gestão básica de veículos e usuários
-- ✅ Histórico de manutenções
-- ✅ Documentação Swagger
+### 4. Aplique as Migrações do Banco de Dados
 
-### Fase 2 - Interface Visual
-- 🔄 Dashboard web responsivo
-- 🔄 Mapa interativo do pátio
-- 🔄 Filtros e buscas avançadas
-- 🔄 Relatórios visuais
+```bash
+dotnet ef database update
+```
 
-### Fase 3 - Automação QR Code
-- 📋 Integração com leitura de QR Codes
-- 📋 Cadastro automático via código
-- 📋 App mobile para operação
+Se você não tiver a ferramenta EF Core instalada globalmente:
 
-### Fase 4 - IoT e Sensores
-- 📋 Sensores de presença automáticos
-- 📋 Alertas em tempo real
-- 📋 Coleta de dados ambientais
-- 📋 Integração com sistemas externos
+```bash
+dotnet tool install --global dotnet-ef
+```
 
-## 📊 Métricas e Benefícios
+## 🏃 Executando o Projeto
 
-### Ganhos Operacionais
-- **Redução de 80%** no tempo de localização de veículos
-- **Eliminação de 100%** dos erros de registro manual
-- **Aumento de 60%** na eficiência da triagem
+### Modo Desenvolvimento
 
-### Benefícios Técnicos
-- Padronização completa do processo
-- Rastreabilidade total das operações
-- Base sólida para automação futura
-- Relatórios precisos para tomada de decisão
+```bash
+dotnet run
+```
+
+Ou, se estiver usando Visual Studio, pressione `F5` para executar com debug.
+
+A API estará disponível em:
+- HTTP: `http://localhost:5000`
+- HTTPS: `https://localhost:5001`
+
+### Acessar a Documentação Swagger
+
+Após iniciar a aplicação, acesse:
+
+```
+https://localhost:5001/swagger
+```
+
+## 🔌 Endpoints da API
+
+### Usuários
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/api/users` | Lista todos os usuários (paginado) |
+| GET | `/api/users/{id}` | Obtém um usuário específico |
+| POST | `/api/users` | Cria um novo usuário |
+| PUT | `/api/users/{id}` | Atualiza um usuário existente |
+| DELETE | `/api/users/{id}` | Remove um usuário |
+
+### Veículos
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/api/vehicles` | Lista todos os veículos (paginado) |
+| GET | `/api/vehicles/{id}` | Obtém um veículo específico |
+| POST | `/api/vehicles` | Cadastra um novo veículo |
+| PUT | `/api/vehicles/{id}` | Atualiza um veículo existente |
+| DELETE | `/api/vehicles/{id}` | Remove um veículo |
+
+### Histórico de Manutenções
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/api/maintenancehistories` | Lista todos os históricos (paginado) |
+| GET | `/api/maintenancehistories/{id}` | Obtém um histórico específico |
+| GET | `/api/maintenancehistories/vehicle/{vehicleId}` | Lista históricos de um veículo |
+| POST | `/api/maintenancehistories` | Registra uma nova manutenção |
+| PUT | `/api/maintenancehistories/{id}` | Atualiza um histórico |
+| DELETE | `/api/maintenancehistories/{id}` | Cancela um histórico de manutenção |
+
+## 💡 Exemplos de Uso
+
+### Criar um Novo Usuário
+
+```bash
+curl -X POST https://localhost:5001/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "João Silva",
+    "email": "joao.silva@email.com",
+    "userType": 1
+  }'
+```
+
+### Cadastrar um Veículo
+
+```bash
+curl -X POST https://localhost:5001/api/vehicles \
+  -H "Content-Type: application/json" \
+  -d '{
+    "licensePlate": "ABC-1234",
+    "model": "Honda Civic",
+    "year": 2023,
+    "userId": 1
+  }'
+```
+
+### Registrar uma Manutenção
+
+```bash
+curl -X POST https://localhost:5001/api/maintenancehistories \
+  -H "Content-Type: application/json" \
+  -d '{
+    "vehicleId": 1,
+    "description": "Troca de óleo e filtros",
+    "date": "2024-03-15T10:00:00",
+    "cost": 350.00,
+    "mileage": 15000
+  }'
+```
+
+### Listar Veículos com Paginação
+
+```bash
+curl -X GET "https://localhost:5001/api/vehicles?page=1&pageSize=10"
+```
+
+### Consultar Histórico de um Veículo
+
+```bash
+curl -X GET https://localhost:5001/api/maintenancehistories/vehicle/1
+```
+
+## 🤝 Contribuindo
+
+Contribuições são sempre bem-vindas! Para contribuir:
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/MinhaFeature`)
+5. Abra um Pull Request
+
+### Diretrizes de Contribuição
+
+- Mantenha o código limpo e bem documentado
+- Siga os padrões de código do projeto
+- Adicione testes para novas funcionalidades
+- Atualize a documentação quando necessário
+- Descreva claramente as mudanças no Pull Request
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
 ## 👨‍💻 Equipe de Desenvolvimento
 
 | Desenvolvedor | RM |
-|---------------|-------|
-| **Gustavo Lazzuri** | 556772 |
-| **Eduardo Nagado** | 558158 |
-| **Felipe Silva** | 555307 |
+|--------------|-----|
+| Gustavo Lazzuri | 556772 |
+| Eduardo Nagado | 558158 |
+| Felipe Silva | 555307 |
 
-## 📞 Suporte e Contato
+## 📞 Contato
 
-Para dúvidas técnicas, sugestões ou relatos de bugs:
-- **Issues**: [GitHub Issues](https://github.com/guLazzuri/challenge-dotnet/issues)
-- **Documentação**: Swagger UI integrada
-- **Contato**: Via plataforma FIAP
-
-## 📄 Licença
-
-Este projeto é desenvolvido para fins educacionais como parte do Challenge FIAP 2025. Todos os direitos são reservados para uso acadêmico e avaliação.
+Para dúvidas ou sugestões, entre em contato através do email: contato@exemplo.com
 
 ---
 
-*Transformando a gestão de pátios através da tecnologia* 🚀
+Desenvolvido com ❤️ usando .NET 8
