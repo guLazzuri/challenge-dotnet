@@ -340,47 +340,40 @@ curl -X GET https://localhost:5001/api/maintenancehistories/vehicle/1
 
 ## 🧪 Testes
 
-### Executando os Testes
+### Como executar os testes
 
-Para executar todos os testes do projeto:
+Os testes estão localizados na pasta `Challenge.Tests/` e cobrem controllers, serviços e repositórios principais.
 
+**Executar todos os testes:**
 ```bash
-dotnet test
+dotnet test Challenge.Tests/Challenge.Tests.csproj
 ```
 
-### Executar testes com cobertura detalhada:
-
+**Executar testes com saída detalhada:**
 ```bash
-dotnet test --logger "console;verbosity=detailed"
+dotnet test Challenge.Tests/Challenge.Tests.csproj --logger "console;verbosity=detailed"
 ```
 
-### Executar testes de uma classe específica:
-
+**Executar testes de uma classe específica:**
 ```bash
-dotnet test --filter "FullyQualifiedName~UserControllerTests"
+dotnet test Challenge.Tests/Challenge.Tests.csproj --filter "FullyQualifiedName~UserControllerTests"
 ```
 
-### Gerar relatório de cobertura de código:
-
+**Gerar relatório de cobertura de código:**
 ```bash
-dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+dotnet test Challenge.Tests/Challenge.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 ```
 
-### Estrutura de Testes
-
+**Estrutura dos arquivos de teste:**
 ```
-📁 Tests/
-├── UnitTests/                    # Testes unitários
-│   ├── Controllers/              # Testes dos controllers
-│   ├── Services/                 # Testes dos serviços
-│   └── Repositories/             # Testes dos repositórios
-│
-└── IntegrationTests/             # Testes de integração
-    ├── API/                      # Testes end-to-end da API
-    └── Database/                 # Testes de persistência
+Challenge.Tests/
+├── MaintenanceHistoriesControllerTests.cs
+├── UserControllerTests.cs
+├── VehiclesControllerTests.cs
+└── ...
 ```
 
-*Nota: Certifique-se de ter o projeto de testes configurado antes de executar os comandos acima.*
+*Certifique-se de restaurar as dependências e compilar o projeto antes de rodar os testes.*
 
 ## 📊 Benefícios e Ganhos
 
