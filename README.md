@@ -1,4 +1,4 @@
-# 🏍️ Challenge .NET - Sistema de Gestão de Veículos e Manutenção
+# 🏍️ Challenge .NET - Sistema de Gestão de Veículos e Manutenção.
 
 > API RESTful completa para gerenciamento inteligente de usuários, veículos e históricos de manutenção, desenvolvida em ASP.NET Core 8 com arquitetura em camadas e boas práticas.
 
