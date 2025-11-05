@@ -268,6 +268,40 @@ A arquitetura escolhida permite:
    https://localhost:5001/swagger
    ```
 
+## 🔒 Segurança da API (JWT)
+
+A API exige autenticação JWT para todos os endpoints protegidos. Para obter um token:
+
+1. Faça uma requisição POST para `/api/v1/user/login` com o corpo:
+   ```json
+   {
+     "email": "<email do usuário>",
+     "password": "123456"
+   }
+   ```
+2. Use o token retornado no header `Authorization`:
+   ```
+   Authorization: Bearer <seu_token_jwt>
+   ```
+
+## 🧪 Testes Automatizados
+
+O projeto possui testes unitários e de integração com xUnit:
+
+### Executar todos os testes
+
+Abra o terminal na pasta do projeto e execute:
+
+```
+dotnet test
+```
+
+Os testes cobrem lógica principal dos controllers e integração básica (Swagger endpoint).
+
+## 📝 Documentação Swagger
+
+A documentação interativa está disponível em `/swagger` e já inclui instruções para autenticação JWT.
+
 ## 💡 Exemplos de Uso
 
 ### Criar um Novo Usuário

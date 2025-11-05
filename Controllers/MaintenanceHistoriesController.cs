@@ -4,12 +4,14 @@ using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
 using challenge.Domain.DTOs;
 using challenge.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace challenge.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize]
     public class MaintenanceHistoriesController : ControllerBase
     {
         private readonly ChallengeContext _context;

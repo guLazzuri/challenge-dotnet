@@ -4,12 +4,15 @@ using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
 using challenge.Domain.DTOs;
 using challenge.Infrastructure.Services;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace challenge.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly ChallengeContext _context;
@@ -19,6 +22,12 @@ namespace challenge.Controllers
         {
             _context = context;
             _hateoasService = hateoasService;
+        }
+
+        public class LoginDto
+        {
+            public string Email { get; set; }
+            public string Password { get; set; }
         }
 
         /// <summary>
@@ -150,6 +159,35 @@ namespace challenge.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public IActionResult Login([FromBody] LoginDto loginDto, [FromServices] IOptions<challenge.Infrastructure.Config.JwtSettings> jwtOptions)
+        {
+            // Simples validação: email existe e senha = "123456" (ajuste para sua lógica real)
+            var user = _context.Users.FirstOrDefault(u => u.Email == loginDto.Email);
+            if (user == null || loginDto.Password != "123456")
+            {
+                return Unauthorized(new { error = "Credenciais inválidas" });
+            }
+            var jwtSettings = jwtOptions.Value;
+            var claims = new[]
+            {
+                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, user.UserID.ToString()),
+                new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email)
+            };
+            var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSettings.Key));
+            var creds = new Microsoft.IdentityModel.Tokens.SigningCredentials(key, Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256);
+            var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
+                issuer: jwtSettings.Issuer,
+                audience: jwtSettings.Audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(jwtSettings.ExpiryMinutes),
+                signingCredentials: creds
+            );
+            var tokenString = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
+            return Ok(new { token = tokenString });
         }
 
         private bool UserExists(Guid id)
