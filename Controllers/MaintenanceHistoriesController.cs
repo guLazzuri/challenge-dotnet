@@ -7,8 +7,9 @@ using challenge.Infrastructure.Services;
 
 namespace challenge.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class MaintenanceHistoriesController : ControllerBase
     {
         private readonly ChallengeContext _context;

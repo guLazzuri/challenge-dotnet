@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using HealthChecks.Oracle;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using challenge.Infrastructure.Persistence.Repositories;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
 using challenge.Infrastructure.Context;
 using challenge.Domain.Entity;
 using challenge.Infrastructure.Services;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 namespace Challenge
 {
     public class Program
@@ -26,54 +26,18 @@ namespace Challenge
             ////Tenho pre definido e pre criado quando precisar termino
             //builder.Services.AddTransient();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(x =>
+
+            builder.Services.AddApiVersioning(options =>
             {
-                x.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = builder.Configuration["Swagger:Title"],
-                    Description = @"
-                        ## 🏍️ GEF API - Sistema de Gestão de Pátio Inteligente
-                        
-                        Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas.
-                    ",
-                    Version = "v1",
-                    Contact = new OpenApiContact()
-                    {
-                        Name = "Gustavo Lazzuri",
-                        Email = "gulazzuri@gmail.com",
-                        Url = new Uri("https://github.com/guLazzuri/challenge-dotnet")
-                    }
-                });
+                options.DefaultApiVersion = new ApiVersion(1, 0); // Versão padrão 1.0
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+            });
 
-                // Incluir comentários XML
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                x.IncludeXmlComments(xmlPath);
-
-                // Adicionar esquemas de exemplo
-                x.MapType<VehicleModel>(() => new Microsoft.OpenApi.Models.OpenApiSchema
-                {
-                    Type = "string",
-                    Enum = new List<Microsoft.OpenApi.Any.IOpenApiAny>
-                    {
-                        new Microsoft.OpenApi.Any.OpenApiString("E"),
-                        new Microsoft.OpenApi.Any.OpenApiString("SPORT"),
-                        new Microsoft.OpenApi.Any.OpenApiString("POP")
-                    }
-                });
-
-                x.MapType<UserType>(() => new Microsoft.OpenApi.Models.OpenApiSchema
-                {
-                    Type = "string",
-                    Enum = new List<Microsoft.OpenApi.Any.IOpenApiAny>
-                    {
-                        new Microsoft.OpenApi.Any.OpenApiString("ADMIN"),
-                        new Microsoft.OpenApi.Any.OpenApiString("CLIENT")
-                    }
-                });
+            builder.Services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'V"; // Formato do grupo de versão: v1, v2, etc.
+                options.SubstituteApiVersionInUrl = true;
             });
 
             builder.Services.AddDbContext<ChallengeContext>(options =>
@@ -81,18 +45,16 @@ namespace Challenge
                 options.UseOracle(builder.Configuration.GetConnectionString("Oracle"));
             });
 
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(); // Adiciona o SwaggerGen
+            builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>(); // Adiciona o ConfigureSwaggerOptions
+
             // Repository Pattern
             builder.Services.AddScoped<IRepository<Vehicle>, Repository<Vehicle>>();
             builder.Services.AddScoped<IRepository<User>, Repository<User>>();
             builder.Services.AddScoped<IRepository<MaintenanceHistory>, Repository<MaintenanceHistory>>();
-
-            builder.Services.AddHealthChecks()
-            .AddOracle(
-                connectionString: builder.Configuration.GetConnectionString("Oracle"),
-                name: "oracle",
-                failureStatus: HealthStatus.Unhealthy,
-                tags: new[] { "db", "oracle" }
-            );
 
             // HATEOAS Service
             builder.Services.AddScoped<IHateoasService, HateoasService>();
@@ -100,15 +62,20 @@ namespace Challenge
 
             var app = builder.Build();
 
+            
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.MapHealthChecks("/health");
-
+                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", 
+                        $"Challenge API {description.GroupName.ToUpper()}");
+                }
+                options.RoutePrefix = string.Empty; // Swagger na raiz
+            });
 
             app.UseHttpsRedirection();
 
