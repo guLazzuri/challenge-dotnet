@@ -1,12 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using HealthChecks.Oracle;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using challenge.Infrastructure.Persistence.Repositories;
-using Microsoft.OpenApi.Models;
 using System.Reflection;
-using challenge.Infrastructure.Context;
 using challenge.Domain.Entity;
+using challenge.Infrastructure.Context;
+using challenge.Infrastructure.Persistence.Repositories;
 using challenge.Infrastructure.Services;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 namespace Challenge
 {
     public class Program
@@ -47,6 +48,8 @@ namespace Challenge
                         Url = new Uri("https://github.com/guLazzuri/challenge-dotnet")
                     }
                 });
+
+
 
                 // Incluir comentários XML
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -93,6 +96,14 @@ namespace Challenge
                 failureStatus: HealthStatus.Unhealthy,
                 tags: new[] { "db", "oracle" }
             );
+
+            builder.Services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true; // retorna no header
+            });
+
 
             // HATEOAS Service
             builder.Services.AddScoped<IHateoasService, HateoasService>();

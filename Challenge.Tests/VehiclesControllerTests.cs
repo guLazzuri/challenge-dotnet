@@ -2,7 +2,6 @@
 using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
 using challenge.Infrastructure.Services;
-using cp_02.Controllers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using Xunit;
 using Moq;
 using challenge.Domain.DTOs;
+using challenge.Controllers;
 
 public class VehiclesControllerTests
 {

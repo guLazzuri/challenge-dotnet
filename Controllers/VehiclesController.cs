@@ -5,10 +5,11 @@ using challenge.Infrastructure.Context;
 using challenge.Domain.DTOs;
 using challenge.Infrastructure.Services;
 
-namespace cp_02.Controllers
+namespace challenge.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class VehiclesController : ControllerBase
     {
         private readonly ChallengeContext _context;
