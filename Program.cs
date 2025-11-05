@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using challenge.Controllers;
+using HealthChecks.Oracle;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using challenge.Infrastructure.Persistence.Repositories;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -40,16 +40,16 @@ namespace Challenge
                         Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas.
                     ",
                     Version = "v1",
-                    Contact = new OpenApiContact() 
-                    { 
-                        Name = "Gustavo Lazzuri", 
+                    Contact = new OpenApiContact()
+                    {
+                        Name = "Gustavo Lazzuri",
                         Email = "gulazzuri@gmail.com",
                         Url = new Uri("https://github.com/guLazzuri/challenge-dotnet")
                     }
                 });
 
                 // Incluir comentários XML
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"; 
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 x.IncludeXmlComments(xmlPath);
 
@@ -86,6 +86,14 @@ namespace Challenge
             builder.Services.AddScoped<IRepository<User>, Repository<User>>();
             builder.Services.AddScoped<IRepository<MaintenanceHistory>, Repository<MaintenanceHistory>>();
 
+            builder.Services.AddHealthChecks()
+            .AddOracle(
+                connectionString: builder.Configuration.GetConnectionString("Oracle"),
+                name: "oracle",
+                failureStatus: HealthStatus.Unhealthy,
+                tags: new[] { "db", "oracle" }
+            );
+
             // HATEOAS Service
             builder.Services.AddScoped<IHateoasService, HateoasService>();
 
@@ -98,6 +106,9 @@ namespace Challenge
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.MapHealthChecks("/health");
+
 
             app.UseHttpsRedirection();
 
