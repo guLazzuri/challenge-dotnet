@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using challenge.Domain.DTOs;
 using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
-using challenge.Domain.DTOs;
 using challenge.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace challenge.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
+    [Authorize]
     public class MaintenanceHistoriesController : ControllerBase
     {
         private readonly ChallengeContext _context;
