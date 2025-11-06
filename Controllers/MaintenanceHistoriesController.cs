@@ -4,9 +4,11 @@ using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
 using challenge.Domain.DTOs;
 using challenge.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace challenge.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
@@ -30,6 +32,7 @@ namespace challenge.Controllers
         /// <response code="400">Invalid pagination parameters</response>
         /// <response code="500">Internal server error</response>
         [HttpGet(Name = "GetMaintenanceHistories")]
+        [Authorize(Roles = "ADMIN,CLIENT")] // Permitir acesso a ADMIN e CLIENT para listagem
         public async Task<ActionResult<PagedResult<MaintenanceHistory>>> GetMaintenanceHistories(
             [FromQuery] int pageNumber = 1, 
             [FromQuery] int pageSize = 10)
@@ -64,6 +67,7 @@ namespace challenge.Controllers
         /// <response code="404">Maintenance history not found</response>
         /// <response code="500">Internal server error</response>
         [HttpGet("{id}", Name = "GetMaintenanceHistory")]
+        [Authorize(Roles = "ADMIN,CLIENT")] // Permitir acesso a ADMIN e CLIENT para visualização por ID
         public async Task<ActionResult<MaintenanceHistory>> GetMaintenanceHistory(Guid id)
         {
             var maintenanceHistory = await _context.MaintenanceHistories.FindAsync(id);
@@ -86,6 +90,7 @@ namespace challenge.Controllers
         /// <response code="404">Maintenance history not found</response>
         /// <response code="500">Internal server error</response>
         [HttpPut("{id}", Name = "UpdateMaintenanceHistory")]
+        [Authorize(Roles = "ADMIN")] // Apenas ADMIN pode atualizar
         public async Task<IActionResult> PutMaintenanceHistory(Guid id, MaintenanceHistory maintenanceHistory)
         {
             if (id != maintenanceHistory.MaintenanceHistoryID)
@@ -122,6 +127,7 @@ namespace challenge.Controllers
         /// <response code="400">Invalid request</response>
         /// <response code="500">Internal server error</response>
         [HttpPost(Name = "CreateMaintenanceHistory")]
+        [Authorize(Roles = "ADMIN")] // Apenas ADMIN pode criar
         public async Task<ActionResult<MaintenanceHistory>> PostMaintenanceHistory(MaintenanceHistory maintenanceHistory)
         {
             _context.MaintenanceHistories.Add(maintenanceHistory);
@@ -138,6 +144,7 @@ namespace challenge.Controllers
         /// <response code="404">Maintenance history not found</response>
         /// <response code="500">Internal server error</response>
         [HttpDelete("{id}", Name = "DeleteMaintenanceHistory")]
+        [Authorize(Roles = "ADMIN")] // Apenas ADMIN pode deletar
         public async Task<IActionResult> DeleteMaintenanceHistory(Guid id)
         {
             var maintenanceHistory = await _context.MaintenanceHistories.FindAsync(id);

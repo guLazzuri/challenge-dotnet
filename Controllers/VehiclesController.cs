@@ -4,9 +4,11 @@ using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
 using challenge.Domain.DTOs;
 using challenge.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace challenge.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
@@ -30,6 +32,7 @@ namespace challenge.Controllers
         /// <response code="400">Invalid pagination parameters</response>
         /// <response code="500">Internal server error</response>
         [HttpGet(Name = "GetVehicles")]
+        [AllowAnonymous] // Permitir acesso sem autenticação para listagem de veículos
         public async Task<ActionResult<PagedResult<Vehicle>>> GetVehicles(
             [FromQuery] int pageNumber = 1, 
             [FromQuery] int pageSize = 10)
@@ -64,6 +67,7 @@ namespace challenge.Controllers
         /// <response code="404">Vehicle not found</response>
         /// <response code="500">Internal server error</response>
         [HttpGet("{id}", Name = "GetVehicle")]
+        [AllowAnonymous] // Permitir acesso sem autenticação para visualização de veículo por ID
         public async Task<ActionResult<Vehicle>> GetVehicle(Guid id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
@@ -86,6 +90,7 @@ namespace challenge.Controllers
         /// <response code="404">Vehicle not found</response>
         /// <response code="500">Internal server error</response>
         [HttpPut("{id}", Name = "UpdateVehicle")]
+        [Authorize(Roles = "ADMIN")] // Apenas ADMIN pode atualizar veículo
         public async Task<IActionResult> PutVehicle(Guid id, [FromBody] Vehicle vehicle)
         {
             if (!ModelState.IsValid)
@@ -154,6 +159,7 @@ namespace challenge.Controllers
         /// <response code="400">Invalid request</response>
         /// <response code="500">Internal server error</response>
         [HttpPost(Name = "CreateVehicle")]
+        [Authorize(Roles = "ADMIN")] // Apenas ADMIN pode criar veículo
         public async Task<ActionResult<Vehicle>> PostVehicle(Vehicle vehicle)
         {
             _context.Vehicles.Add(vehicle);
@@ -170,6 +176,7 @@ namespace challenge.Controllers
         /// <response code="404">Vehicle not found</response>
         /// <response code="500">Internal server error</response>
         [HttpDelete("{id}", Name = "DeleteVehicle")]
+        [Authorize(Roles = "ADMIN")] // Apenas ADMIN pode deletar veículo
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);

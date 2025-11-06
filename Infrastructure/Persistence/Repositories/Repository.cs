@@ -1,5 +1,6 @@
 ﻿
 using challenge.Infrastructure.Context;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace challenge.Infrastructure.Persistence.Repositories
@@ -18,6 +19,11 @@ namespace challenge.Infrastructure.Persistence.Repositories
         public async Task<T> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<T> Get(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate);
         }
 
         public async Task<IEnumerable<T>> GetAsync()
