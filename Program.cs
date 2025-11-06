@@ -1,15 +1,16 @@
 using System.Reflection;
+using System.Text;
 using challenge.Domain.Entity;
 using challenge.Infrastructure.Context;
 using challenge.Infrastructure.Persistence.Repositories;
 using challenge.Infrastructure.Services;
-using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+
 namespace Challenge
 {
     public class Program
@@ -18,81 +19,42 @@ namespace Challenge
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container depency injector.
-
-            ////Criado uma vez e usamos toda vez que precisamos
-            //builder.Services.AddSingleton();
-
-            ////Tenho pre definido e termino de criar quando precisar
-            //builder.Services.AddScoped();
-
-            ////Tenho pre definido e pre criado quando precisar termino
-            //builder.Services.AddTransient();
-
+            // ---------------------------
+            // DEPENDENCY INJECTION
+            // ---------------------------
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
+            // ---------------------------
+            // SWAGGER CONFIGURATION
+            // ---------------------------
             builder.Services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = builder.Configuration["Swagger:Title"],
-                    Description = @"
-                        ## 🏍️ GEF API - Sistema de Gestão de Pátio Inteligente
-                        
-                        Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas.
-                    ",
-                    Version = "v1",
-                    Contact = new OpenApiContact()
+                    Title = "API TRACKIN - MOTTU",
+                    Description = "Swagger da API TRACKIN - MOTTU.",
+                    Contact = new OpenApiContact
                     {
-                        Name = "Gustavo Lazzuri",
-                        Email = "gulazzuri@gmail.com",
-                        Url = new Uri("https://github.com/guLazzuri/challenge-dotnet")
+                        Name = "Leandro Correia",
+                        Email = "rm556203@fiap.com.br"
                     }
                 });
 
-
-
-                // Incluir comentários XML
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                x.IncludeXmlComments(xmlPath);
-
-                // Adicionar esquemas de exemplo
-                x.MapType<VehicleModel>(() => new Microsoft.OpenApi.Models.OpenApiSchema
+                // Configuração JWT no Swagger
+                var securityScheme = new OpenApiSecurityScheme
                 {
-                    Type = "string",
-                    Enum = new List<Microsoft.OpenApi.Any.IOpenApiAny>
-                    {
-                        new Microsoft.OpenApi.Any.OpenApiString("E"),
-                        new Microsoft.OpenApi.Any.OpenApiString("SPORT"),
-                        new Microsoft.OpenApi.Any.OpenApiString("POP")
-                    }
-                });
-
-                x.MapType<UserType>(() => new Microsoft.OpenApi.Models.OpenApiSchema
-                {
-                    Type = "string",
-                    Enum = new List<Microsoft.OpenApi.Any.IOpenApiAny>
-                    {
-                        new Microsoft.OpenApi.Any.OpenApiString("ADMIN"),
-                        new Microsoft.OpenApi.Any.OpenApiString("CLIENT")
-                    }
-                });
-
-                // Adicionar botão de Authorize no Swagger
-                x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "Insira o token JWT abaixo (sem 'Bearer')",
                     Name = "Authorization",
-                    In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
                     Scheme = "bearer",
-                    BearerFormat = "JWT"
-                });
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Digite **'Bearer {seu_token}'** para autenticar."
+                };
 
+                x.AddSecurityDefinition("Bearer", securityScheme);
 
-                x.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                var securityRequirement = new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -101,46 +63,65 @@ namespace Challenge
                             {
                                 Type = ReferenceType.SecurityScheme,
                                 Id = "Bearer"
-                            },
-                            Scheme = "oauth2",
-                            Name = "Bearer",
-                            In = ParameterLocation.Header,
-
+                            }
                         },
-                        new List<string>()
+                        Array.Empty<string>()
                     }
-                });
+                };
+
+                x.AddSecurityRequirement(securityRequirement);
+
+                // XML comments (para documentação)
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                if (File.Exists(xmlPath))
+                    x.IncludeXmlComments(xmlPath);
             });
 
+            // ---------------------------
+            // DATABASE CONFIG (Oracle)
+            // ---------------------------
             builder.Services.AddDbContext<ChallengeContext>(options =>
             {
                 options.UseOracle(builder.Configuration.GetConnectionString("Oracle"));
             });
 
-            // Repository Pattern
+            // ---------------------------
+            // REPOSITORIES & SERVICES
+            // ---------------------------
             builder.Services.AddScoped<IRepository<Vehicle>, Repository<Vehicle>>();
             builder.Services.AddScoped<IRepository<User>, Repository<User>>();
-            builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<IRepository<MaintenanceHistory>, Repository<MaintenanceHistory>>();
+            builder.Services.AddScoped<TokenService>();
+            builder.Services.AddScoped<IHateoasService, HateoasService>();
 
+            // ---------------------------
+            // HEALTH CHECK
+            // ---------------------------
             builder.Services.AddHealthChecks()
-            .AddOracle(
-                connectionString: builder.Configuration.GetConnectionString("Oracle"),
-                name: "oracle",
-                failureStatus: HealthStatus.Unhealthy,
-                tags: new[] { "db", "oracle" }
-            );
+                .AddOracle(
+                    connectionString: builder.Configuration.GetConnectionString("Oracle"),
+                    name: "oracle",
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: new[] { "db", "oracle" }
+                );
 
+            // ---------------------------
+            // API VERSIONING
+            // ---------------------------
             builder.Services.AddApiVersioning(options =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.ReportApiVersions = true; // retorna no header
+                options.ReportApiVersions = true;
             });
 
+            // ---------------------------
+            // JWT AUTHENTICATION
+            // ---------------------------
+            var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]
+                ?? throw new InvalidOperationException("Jwt:Key não configurada no appsettings.json"));
 
-            // JWT Authentication
-            var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key not configured"));
             builder.Services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -155,21 +136,22 @@ namespace Challenge
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration["Jwt:Audience"],
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"]
                 };
             });
 
-            // HATEOAS Service
-            builder.Services.AddScoped<IHateoasService, HateoasService>();
-
-
+            // ---------------------------
+            // BUILD APPLICATION
+            // ---------------------------
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // ---------------------------
+            // MIDDLEWARE PIPELINE
+            // ---------------------------
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -178,11 +160,9 @@ namespace Challenge
 
             app.MapHealthChecks("/health");
 
-
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.MapControllers();
