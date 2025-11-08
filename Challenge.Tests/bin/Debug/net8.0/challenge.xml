@@ -1,0 +1,525 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>challenge</name>
+    </assembly>
+    <members>
+        <member name="T:challenge.Controllers.AuthController">
+            <summary>
+            Controller para autenticação e geração de tokens JWT
+            </summary>
+        </member>
+        <member name="M:challenge.Controllers.AuthController.Login(challenge.Controllers.LoginRequest)">
+            <summary>
+            Gera um token JWT para autenticação
+            </summary>
+            <param name="request">Credenciais de login</param>
+            <response code="200">Token gerado com sucesso</response>
+            <response code="401">Credenciais inválidas</response>
+        </member>
+        <member name="M:challenge.Controllers.AuthController.ValidateToken">
+            <summary>
+            Valida se o token JWT está válido
+            </summary>
+            <response code="200">Token válido</response>
+            <response code="401">Token inválido ou expirado</response>
+        </member>
+        <member name="T:challenge.Controllers.LoginRequest">
+            <summary>
+            Modelo de requisição de login
+            </summary>
+        </member>
+        <member name="P:challenge.Controllers.LoginRequest.Username">
+            <summary>
+            Nome de usuário
+            </summary>
+        </member>
+        <member name="P:challenge.Controllers.LoginRequest.Password">
+            <summary>
+            Senha do usuário
+            </summary>
+        </member>
+        <member name="T:challenge.Controllers.HealthController">
+            <summary>
+            Controller para verificação de saúde da API
+            </summary>
+        </member>
+        <member name="M:challenge.Controllers.HealthController.Get">
+            <summary>
+            Verifica o status de saúde da API e suas dependências
+            </summary>
+            <response code="200">API está saudável</response>
+            <response code="503">API ou alguma dependência está com problemas</response>
+        </member>
+        <member name="M:challenge.Controllers.HealthController.Ready">
+            <summary>
+            Endpoint simplificado para verificação rápida (usado por load balancers)
+            </summary>
+            <response code="200">API está pronta</response>
+        </member>
+        <member name="M:challenge.Controllers.HealthController.Live">
+            <summary>
+            Endpoint para verificar se a API está viva (liveness probe)
+            </summary>
+            <response code="200">API está viva</response>
+        </member>
+        <member name="M:challenge.Controllers.MaintenanceHistoriesController.GetMaintenanceHistories(System.Int32,System.Int32)">
+            <summary>
+            Get all maintenance histories with pagination
+            </summary>
+            <param name="pageNumber">Número da página (padrão: 1)</param>
+            <param name="pageSize">Tamanho da página (padrão: 10, máximo: 100)</param>
+            <response code="200">Return paginated maintenance histories</response>
+            <response code="400">Invalid pagination parameters</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.MaintenanceHistoriesController.GetMaintenanceHistory(System.Guid)">
+            <summary>
+            Get a specific maintenance history by ID
+            </summary>
+            <param name="id">ID do histórico de manutenção</param>
+            <response code="200">Return the maintenance history</response>
+            <response code="404">Maintenance history not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.MaintenanceHistoriesController.PutMaintenanceHistory(System.Guid,challenge.Domain.Entity.MaintenanceHistory)">
+            <summary>
+            Update an existing maintenance history
+            </summary>
+            <param name="id">ID do histórico de manutenção</param>
+            <param name="maintenanceHistory">Dados do histórico para atualização</param>
+            <response code="204">Maintenance history updated successfully</response>
+            <response code="400">Invalid request</response>
+            <response code="404">Maintenance history not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.MaintenanceHistoriesController.PostMaintenanceHistory(challenge.Domain.Entity.MaintenanceHistory)">
+            <summary>
+            Create a new maintenance history
+            </summary>
+            <param name="maintenanceHistory">Dados do histórico para criação</param>
+            <response code="201">Maintenance history created successfully</response>
+            <response code="400">Invalid request</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.MaintenanceHistoriesController.DeleteMaintenanceHistory(System.Guid)">
+            <summary>
+            Delete a maintenance history
+            </summary>
+            <param name="id">ID do histórico de manutenção</param>
+            <response code="204">Maintenance history successfully removed</response>
+            <response code="404">Maintenance history not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.UserController.GetUsers(System.Int32,System.Int32)">
+            <summary>
+            Get all users with pagination
+            </summary>
+            <param name="pageNumber">Número da página (padrão: 1)</param>
+            <param name="pageSize">Tamanho da página (padrão: 10, máximo: 100)</param>
+            <response code="200">Return paginated users</response>
+            <response code="400">Invalid pagination parameters</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.UserController.GetUser(System.Guid)">
+            <summary>
+            Get a specific user by ID
+            </summary>
+            <param name="id">ID do usuário</param>
+            <response code="200">Return the user</response>
+            <response code="404">User not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.UserController.PutUser(System.Guid,challenge.Domain.Entity.User)">
+            <summary>
+            Update an existing user
+            </summary>
+            <param name="id">ID do usuário</param>
+            <param name="user">Dados do usuário para atualização</param>
+            <response code="204">User updated successfully</response>
+            <response code="400">Invalid request</response>
+            <response code="404">User not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.UserController.PostUser(challenge.Domain.Entity.User)">
+            <summary>
+            Create a new user
+            </summary>
+            <param name="user">Dados do usuário para criação</param>
+            <response code="201">User created successfully</response>
+            <response code="400">Invalid request</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.UserController.DeleteUser(System.Guid)">
+            <summary>
+            Delete a user
+            </summary>
+            <param name="id">ID do usuário</param>
+            <response code="204">User successfully removed</response>
+            <response code="404">User not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.VehiclesController.GetVehicles(System.Int32,System.Int32)">
+            <summary>
+            Get all vehicles with pagination
+            </summary>
+            <param name="pageNumber">Número da página (padrão: 1)</param>
+            <param name="pageSize">Tamanho da página (padrão: 10, máximo: 100)</param>
+            <response code="200">Return paginated vehicles</response>
+            <response code="400">Invalid pagination parameters</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.VehiclesController.GetVehicle(System.Guid)">
+            <summary>
+            Get a specific vehicle by ID
+            </summary>
+            <param name="id">ID do veículo</param>
+            <response code="200">Return the vehicle</response>
+            <response code="404">Vehicle not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.VehiclesController.PutVehicle(System.Guid,challenge.Domain.Entity.Vehicle)">
+            <summary>
+            Update an existing vehicle
+            </summary>
+            <param name="id">ID do veículo</param>
+            <param name="vehicle">Dados do veículo para atualização</param>
+            <response code="204">Vehicle updated successfully</response>
+            <response code="400">Invalid request</response>
+            <response code="404">Vehicle not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.VehiclesController.PostVehicle(challenge.Domain.Entity.Vehicle)">
+            <summary>
+            Create a new vehicle
+            </summary>
+            <param name="vehicle">Dados do veículo para criação</param>
+            <response code="201">Vehicle created successfully</response>
+            <response code="400">Invalid request</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="M:challenge.Controllers.VehiclesController.DeleteVehicle(System.Guid)">
+            <summary>
+            Delete a vehicle
+            </summary>
+            <param name="id">ID do veículo</param>
+            <response code="204">Vehicle successfully removed</response>
+            <response code="404">Vehicle not found</response>
+            <response code="500">Internal server error</response>
+        </member>
+        <member name="T:challenge.Domain.DTOs.LinkDto">
+            <summary>
+            Representa um link HATEOAS
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.LinkDto.Href">
+            <summary>
+            URL do link
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.LinkDto.Rel">
+            <summary>
+            Tipo de relação do link (ex: self, next, prev, first, last)
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.LinkDto.Method">
+            <summary>
+            Método HTTP do link
+            </summary>
+        </member>
+        <member name="T:challenge.Domain.DTOs.CreateMaintenanceHistoryDto">
+            <summary>
+            DTO para criação de histórico de manutenção
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.CreateMaintenanceHistoryDto.VehicleID">
+            <summary>
+            ID do veículo
+            </summary>
+            <example>123e4567-e89b-12d3-a456-426614174000</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.CreateMaintenanceHistoryDto.UserID">
+            <summary>
+            ID do usuário responsável pela manutenção
+            </summary>
+            <example>456e7890-e89b-12d3-a456-426614174001</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.CreateMaintenanceHistoryDto.MaintenanceDate">
+            <summary>
+            Data da manutenção
+            </summary>
+            <example>2024-01-15T10:30:00</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.CreateMaintenanceHistoryDto.Description">
+            <summary>
+            Descrição da manutenção realizada
+            </summary>
+            <example>Troca de óleo e filtros</example>
+        </member>
+        <member name="T:challenge.Domain.DTOs.UpdateMaintenanceHistoryDto">
+            <summary>
+            DTO para atualização de histórico de manutenção
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateMaintenanceHistoryDto.MaintenanceHistoryID">
+            <summary>
+            ID do histórico de manutenção
+            </summary>
+            <example>789e0123-e89b-12d3-a456-426614174002</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateMaintenanceHistoryDto.VehicleID">
+            <summary>
+            ID do veículo
+            </summary>
+            <example>123e4567-e89b-12d3-a456-426614174000</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateMaintenanceHistoryDto.UserID">
+            <summary>
+            ID do usuário responsável pela manutenção
+            </summary>
+            <example>456e7890-e89b-12d3-a456-426614174001</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateMaintenanceHistoryDto.MaintenanceDate">
+            <summary>
+            Data da manutenção
+            </summary>
+            <example>2024-01-15T14:30:00</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateMaintenanceHistoryDto.Description">
+            <summary>
+            Descrição da manutenção realizada
+            </summary>
+            <example>Revisão completa do motor</example>
+        </member>
+        <member name="T:challenge.Domain.DTOs.PagedResult`1">
+            <summary>
+            Representa um resultado paginado de uma consulta
+            </summary>
+            <typeparam name="T">Tipo dos itens retornados</typeparam>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagedResult`1.Items">
+            <summary>
+            Lista de itens da página atual
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagedResult`1.CurrentPage">
+            <summary>
+            Página atual
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagedResult`1.PageSize">
+            <summary>
+            Tamanho da página
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagedResult`1.TotalItems">
+            <summary>
+            Total de itens
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagedResult`1.TotalPages">
+            <summary>
+            Total de páginas
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagedResult`1.HasPrevious">
+            <summary>
+            Indica se há página anterior
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagedResult`1.HasNext">
+            <summary>
+            Indica se há próxima página
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagedResult`1.Links">
+            <summary>
+            Links de navegação HATEOAS
+            </summary>
+        </member>
+        <member name="T:challenge.Domain.DTOs.PagingParameters">
+            <summary>
+            Parâmetros para paginação
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagingParameters.PageNumber">
+            <summary>
+            Número da página (começa em 1)
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.PagingParameters.PageSize">
+            <summary>
+            Tamanho da página (máximo 100)
+            </summary>
+        </member>
+        <member name="T:challenge.Domain.DTOs.CreateUserDto">
+            <summary>
+            DTO para criação de usuário
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.CreateUserDto.Email">
+            <summary>
+            Email do usuário
+            </summary>
+            <example>usuario@exemplo.com</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.CreateUserDto.Password">
+            <summary>
+            Senha do usuário (mínimo 8 caracteres, com maiúscula, minúscula, número e caractere especial)
+            </summary>
+            <example>MinhaSenh@123</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.CreateUserDto.Type">
+            <summary>
+            Tipo do usuário
+            </summary>
+            <example>ADMIN</example>
+        </member>
+        <member name="T:challenge.Domain.DTOs.UpdateUserDto">
+            <summary>
+            DTO para atualização de usuário
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateUserDto.UserID">
+            <summary>
+            ID do usuário
+            </summary>
+            <example>123e4567-e89b-12d3-a456-426614174000</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateUserDto.Email">
+            <summary>
+            Email do usuário
+            </summary>
+            <example>novoemail@exemplo.com</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateUserDto.Password">
+            <summary>
+            Senha do usuário (mínimo 8 caracteres, com maiúscula, minúscula, número e caractere especial)
+            </summary>
+            <example>NovaSenh@456</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateUserDto.Type">
+            <summary>
+            Tipo do usuário
+            </summary>
+            <example>CLIENT</example>
+        </member>
+        <member name="T:challenge.Domain.DTOs.CreateVehicleDto">
+            <summary>
+            DTO para criação de veículo
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.CreateVehicleDto.LicensePlate">
+            <summary>
+            Placa do veículo (formato: AAA1234 ou AAA1A23)
+            </summary>
+            <example>ABC1234</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.CreateVehicleDto.VehicleModel">
+            <summary>
+            Modelo do veículo
+            </summary>
+            <example>SPORT</example>
+        </member>
+        <member name="T:challenge.Domain.DTOs.UpdateVehicleDto">
+            <summary>
+            DTO para atualização de veículo
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateVehicleDto.VehicleId">
+            <summary>
+            ID do veículo
+            </summary>
+            <example>123e4567-e89b-12d3-a456-426614174000</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateVehicleDto.LicensePlate">
+            <summary>
+            Placa do veículo (formato: AAA1234 ou AAA1A23)
+            </summary>
+            <example>XYZ9876</example>
+        </member>
+        <member name="P:challenge.Domain.DTOs.UpdateVehicleDto.VehicleModel">
+            <summary>
+            Modelo do veículo
+            </summary>
+            <example>POP</example>
+        </member>
+        <member name="T:challenge.Domain.Entity.MaintenanceHistory">
+            <summary>
+            Representa o histórico de manutenção de um veículo.
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.Entity.MaintenanceHistory.MaintenanceHistoryID">
+            <summary>
+            Identificador único do histórico de manutenção.
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.Entity.MaintenanceHistory.VehicleID">
+            <summary>
+            Identificador do veículo.
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.Entity.MaintenanceHistory.UserID">
+            <summary>
+            Identificador do usuário.
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.Entity.MaintenanceHistory.MaintenanceDate">
+            <summary>
+            Data da manutenção.
+            </summary>
+        </member>
+        <member name="P:challenge.Domain.Entity.MaintenanceHistory.Description">
+            <summary>
+            Descrição da manutenção.
+            </summary>
+        </member>
+        <member name="M:challenge.Domain.Entity.MaintenanceHistory.#ctor">
+            <summary>
+            Construtor padrão.
+            </summary>
+        </member>
+        <member name="M:challenge.Domain.Entity.MaintenanceHistory.#ctor(System.Guid,System.Guid,System.Guid,System.DateTime,System.String)">
+            <summary>
+            Construtor com parâmetros.
+            </summary>
+        </member>
+        <member name="M:challenge.Domain.Entity.MaintenanceHistory.ValidateForSave">
+            <summary>
+            Valida a entidade para inserção ou atualização, lançando exceções se inválida.
+            </summary>
+        </member>
+        <member name="T:challenge.Infrastructure.Mappings.MaintenanceHistoryMapping">
+            <summary>
+            Mapeamento da entidade MaintenanceHistory para o banco de dados.
+            </summary>
+        </member>
+        <member name="T:challenge.Infrastructure.Services.IHateoasService">
+            <summary>
+            Serviço para geração de links HATEOAS
+            </summary>
+        </member>
+        <member name="M:challenge.Infrastructure.Services.IHateoasService.GenerateResourceLinks(System.String,System.Guid,Microsoft.AspNetCore.Mvc.IUrlHelper)">
+            <summary>
+            Gera links HATEOAS para um recurso específico
+            </summary>
+        </member>
+        <member name="M:challenge.Infrastructure.Services.IHateoasService.GeneratePaginationLinks``1(challenge.Domain.DTOs.PagedResult{``0},System.String,Microsoft.AspNetCore.Mvc.IUrlHelper)">
+            <summary>
+            Gera links HATEOAS para listas paginadas
+            </summary>
+        </member>
+        <member name="T:challenge.Migrations.Challenge">
+            <inheritdoc />
+        </member>
+        <member name="M:challenge.Migrations.Challenge.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:challenge.Migrations.Challenge.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:challenge.Migrations.Challenge.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

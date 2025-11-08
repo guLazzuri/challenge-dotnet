@@ -1,0 +1,433 @@
+[
+  {
+    "ContainingType": "challenge.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/v1/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "challenge.Controllers.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "challenge.Controllers.AuthController",
+    "Method": "ValidateToken",
+    "RelativePath": "api/v1/Auth/validate",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "challenge.Controllers.HealthController",
+    "Method": "Get",
+    "RelativePath": "api/v1/Health",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "challenge.Controllers.HealthController",
+    "Method": "Live",
+    "RelativePath": "api/v1/Health/live",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "challenge.Controllers.HealthController",
+    "Method": "Ready",
+    "RelativePath": "api/v1/Health/ready",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "challenge.Controllers.MaintenanceHistoriesController",
+    "Method": "GetMaintenanceHistories",
+    "RelativePath": "api/v1/MaintenanceHistories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "challenge.Domain.DTOs.PagedResult\u00601[[challenge.Domain.Entity.MaintenanceHistory, challenge, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetMaintenanceHistories"
+  },
+  {
+    "ContainingType": "challenge.Controllers.MaintenanceHistoriesController",
+    "Method": "PostMaintenanceHistory",
+    "RelativePath": "api/v1/MaintenanceHistories",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maintenanceHistory",
+        "Type": "challenge.Domain.Entity.MaintenanceHistory",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "challenge.Domain.Entity.MaintenanceHistory",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "CreateMaintenanceHistory"
+  },
+  {
+    "ContainingType": "challenge.Controllers.MaintenanceHistoriesController",
+    "Method": "GetMaintenanceHistory",
+    "RelativePath": "api/v1/MaintenanceHistories/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "challenge.Domain.Entity.MaintenanceHistory",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetMaintenanceHistory"
+  },
+  {
+    "ContainingType": "challenge.Controllers.MaintenanceHistoriesController",
+    "Method": "PutMaintenanceHistory",
+    "RelativePath": "api/v1/MaintenanceHistories/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "maintenanceHistory",
+        "Type": "challenge.Domain.Entity.MaintenanceHistory",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "UpdateMaintenanceHistory"
+  },
+  {
+    "ContainingType": "challenge.Controllers.MaintenanceHistoriesController",
+    "Method": "DeleteMaintenanceHistory",
+    "RelativePath": "api/v1/MaintenanceHistories/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "DeleteMaintenanceHistory"
+  },
+  {
+    "ContainingType": "challenge.Controllers.UserController",
+    "Method": "GetUsers",
+    "RelativePath": "api/v1/User",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "challenge.Domain.DTOs.PagedResult\u00601[[challenge.Domain.Entity.User, challenge, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetUsers"
+  },
+  {
+    "ContainingType": "challenge.Controllers.UserController",
+    "Method": "PostUser",
+    "RelativePath": "api/v1/User",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "challenge.Domain.Entity.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "challenge.Domain.Entity.User",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "CreateUser"
+  },
+  {
+    "ContainingType": "challenge.Controllers.UserController",
+    "Method": "GetUser",
+    "RelativePath": "api/v1/User/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "challenge.Domain.Entity.User",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetUser"
+  },
+  {
+    "ContainingType": "challenge.Controllers.UserController",
+    "Method": "PutUser",
+    "RelativePath": "api/v1/User/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "user",
+        "Type": "challenge.Domain.Entity.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "UpdateUser"
+  },
+  {
+    "ContainingType": "challenge.Controllers.UserController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/v1/User/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "DeleteUser"
+  },
+  {
+    "ContainingType": "challenge.Controllers.VehiclesController",
+    "Method": "GetVehicles",
+    "RelativePath": "api/v1/Vehicles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "challenge.Domain.DTOs.PagedResult\u00601[[challenge.Domain.Entity.Vehicle, challenge, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetVehicles"
+  },
+  {
+    "ContainingType": "challenge.Controllers.VehiclesController",
+    "Method": "PostVehicle",
+    "RelativePath": "api/v1/Vehicles",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vehicle",
+        "Type": "challenge.Domain.Entity.Vehicle",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "challenge.Domain.Entity.Vehicle",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "CreateVehicle"
+  },
+  {
+    "ContainingType": "challenge.Controllers.VehiclesController",
+    "Method": "GetVehicle",
+    "RelativePath": "api/v1/Vehicles/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "challenge.Domain.Entity.Vehicle",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetVehicle"
+  },
+  {
+    "ContainingType": "challenge.Controllers.VehiclesController",
+    "Method": "PutVehicle",
+    "RelativePath": "api/v1/Vehicles/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "vehicle",
+        "Type": "challenge.Domain.Entity.Vehicle",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "UpdateVehicle"
+  },
+  {
+    "ContainingType": "challenge.Controllers.VehiclesController",
+    "Method": "DeleteVehicle",
+    "RelativePath": "api/v1/Vehicles/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [],
+    "EndpointName": "DeleteVehicle"
+  }
+]

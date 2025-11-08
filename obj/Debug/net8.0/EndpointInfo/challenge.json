@@ -1,0 +1,1185 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Challenge",
+    "description": "\n                        ## 🏍️ GEF API - Sistema de Gestão de Pátio Inteligente\n                        \n                        Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas.\n                        \n                        ### Segurança\n                        Esta API utiliza autenticação JWT Bearer Token. Para acessar endpoints protegidos:\n                        1. Obtenha um token através do endpoint de autenticação\n                        2. Clique no botão 'Authorize' acima\n                        3. Insira o token no formato: Bearer {seu_token}\n                    ",
+    "contact": {
+      "name": "Gustavo Lazzuri",
+      "url": "https://github.com/guLazzuri/challenge-dotnet",
+      "email": "gulazzuri@gmail.com"
+    },
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/Auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Gera um token JWT para autenticação",
+        "requestBody": {
+          "description": "Credenciais de login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token gerado com sucesso"
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          }
+        }
+      }
+    },
+    "/api/v1/Auth/validate": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Valida se o token JWT está válido",
+        "responses": {
+          "200": {
+            "description": "Token válido"
+          },
+          "401": {
+            "description": "Token inválido ou expirado"
+          }
+        }
+      }
+    },
+    "/api/v1/Health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Verifica o status de saúde da API e suas dependências",
+        "responses": {
+          "200": {
+            "description": "API está saudável"
+          },
+          "503": {
+            "description": "API ou alguma dependência está com problemas"
+          }
+        }
+      }
+    },
+    "/api/v1/Health/ready": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Endpoint simplificado para verificação rápida (usado por load balancers)",
+        "responses": {
+          "200": {
+            "description": "API está pronta"
+          }
+        }
+      }
+    },
+    "/api/v1/Health/live": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Endpoint para verificar se a API está viva (liveness probe)",
+        "responses": {
+          "200": {
+            "description": "API está viva"
+          }
+        }
+      }
+    },
+    "/api/v1/MaintenanceHistories": {
+      "get": {
+        "tags": [
+          "MaintenanceHistories"
+        ],
+        "summary": "Get all maintenance histories with pagination",
+        "operationId": "GetMaintenanceHistories",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Número da página (padrão: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Tamanho da página (padrão: 10, máximo: 100)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return paginated maintenance histories",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceHistoryPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceHistoryPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceHistoryPagedResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination parameters"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MaintenanceHistories"
+        ],
+        "summary": "Create a new maintenance history",
+        "operationId": "CreateMaintenanceHistory",
+        "requestBody": {
+          "description": "Dados do histórico para criação",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MaintenanceHistory"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MaintenanceHistory"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MaintenanceHistory"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceHistory"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceHistory"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceHistory"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Maintenance history created successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/MaintenanceHistories/{id}": {
+      "get": {
+        "tags": [
+          "MaintenanceHistories"
+        ],
+        "summary": "Get a specific maintenance history by ID",
+        "operationId": "GetMaintenanceHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do histórico de manutenção",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return the maintenance history",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceHistory"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceHistory"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaintenanceHistory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Maintenance history not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "MaintenanceHistories"
+        ],
+        "summary": "Update an existing maintenance history",
+        "operationId": "UpdateMaintenanceHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do histórico de manutenção",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Dados do histórico para atualização",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MaintenanceHistory"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MaintenanceHistory"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MaintenanceHistory"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Maintenance history updated successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Maintenance history not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "MaintenanceHistories"
+        ],
+        "summary": "Delete a maintenance history",
+        "operationId": "DeleteMaintenanceHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do histórico de manutenção",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Maintenance history successfully removed"
+          },
+          "404": {
+            "description": "Maintenance history not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/User": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get all users with pagination",
+        "operationId": "GetUsers",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Número da página (padrão: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Tamanho da página (padrão: 10, máximo: 100)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return paginated users",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPagedResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination parameters"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create a new user",
+        "operationId": "CreateUser",
+        "requestBody": {
+          "description": "Dados do usuário para criação",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "User created successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/User/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get a specific user by ID",
+        "operationId": "GetUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return the user",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update an existing user",
+        "operationId": "UpdateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Dados do usuário para atualização",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "User updated successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete a user",
+        "operationId": "DeleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "User successfully removed"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/Vehicles": {
+      "get": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Get all vehicles with pagination",
+        "operationId": "GetVehicles",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Número da página (padrão: 1)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Tamanho da página (padrão: 10, máximo: 100)",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return paginated vehicles",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehiclePagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehiclePagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehiclePagedResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination parameters"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Create a new vehicle",
+        "operationId": "CreateVehicle",
+        "requestBody": {
+          "description": "Dados do veículo para criação",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Vehicle"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Vehicle"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Vehicle"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Vehicle created successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/Vehicles/{id}": {
+      "get": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Get a specific vehicle by ID",
+        "operationId": "GetVehicle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do veículo",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return the vehicle",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vehicle not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Update an existing vehicle",
+        "operationId": "UpdateVehicle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do veículo",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Dados do veículo para atualização",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Vehicle"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Vehicle"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Vehicle"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Vehicle updated successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Vehicle not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Delete a vehicle",
+        "operationId": "DeleteVehicle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do veículo",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Vehicle successfully removed"
+          },
+          "404": {
+            "description": "Vehicle not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LinkDto": {
+        "type": "object",
+        "properties": {
+          "href": {
+            "type": "string",
+            "description": "URL do link",
+            "nullable": true
+          },
+          "rel": {
+            "type": "string",
+            "description": "Tipo de relação do link (ex: self, next, prev, first, last)",
+            "nullable": true
+          },
+          "method": {
+            "type": "string",
+            "description": "Método HTTP do link",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Representa um link HATEOAS"
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Nome de usuário",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "description": "Senha do usuário",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Modelo de requisição de login"
+      },
+      "MaintenanceHistory": {
+        "type": "object",
+        "properties": {
+          "maintenanceHistoryID": {
+            "type": "string",
+            "description": "Identificador único do histórico de manutenção.",
+            "format": "uuid"
+          },
+          "vehicleID": {
+            "type": "string",
+            "description": "Identificador do veículo.",
+            "format": "uuid"
+          },
+          "userID": {
+            "type": "string",
+            "description": "Identificador do usuário.",
+            "format": "uuid"
+          },
+          "maintenanceDate": {
+            "type": "string",
+            "description": "Data da manutenção.",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição da manutenção.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Representa o histórico de manutenção de um veículo."
+      },
+      "MaintenanceHistoryPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MaintenanceHistory"
+            },
+            "description": "Lista de itens da página atual",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "description": "Página atual",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Tamanho da página",
+            "format": "int32"
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total de itens",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total de páginas",
+            "format": "int32",
+            "readOnly": true
+          },
+          "hasPrevious": {
+            "type": "boolean",
+            "description": "Indica se há página anterior",
+            "readOnly": true
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "Indica se há próxima página",
+            "readOnly": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "description": "Links de navegação HATEOAS",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Representa um resultado paginado de uma consulta"
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "userCancelID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isCancel": {
+            "type": "boolean"
+          },
+          "userID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "enum": [
+              "ADMIN",
+              "CLIENT"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserPagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "description": "Lista de itens da página atual",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "description": "Página atual",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Tamanho da página",
+            "format": "int32"
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total de itens",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total de páginas",
+            "format": "int32",
+            "readOnly": true
+          },
+          "hasPrevious": {
+            "type": "boolean",
+            "description": "Indica se há página anterior",
+            "readOnly": true
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "Indica se há próxima página",
+            "readOnly": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "description": "Links de navegação HATEOAS",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Representa um resultado paginado de uma consulta"
+      },
+      "Vehicle": {
+        "type": "object",
+        "properties": {
+          "userCancelID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isCancel": {
+            "type": "boolean"
+          },
+          "vehicleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "licensePlate": {
+            "type": "string",
+            "nullable": true
+          },
+          "vehicleModel": {
+            "enum": [
+              "E",
+              "SPORT",
+              "POP"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VehiclePagedResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Vehicle"
+            },
+            "description": "Lista de itens da página atual",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "description": "Página atual",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Tamanho da página",
+            "format": "int32"
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total de itens",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total de páginas",
+            "format": "int32",
+            "readOnly": true
+          },
+          "hasPrevious": {
+            "type": "boolean",
+            "description": "Indica se há página anterior",
+            "readOnly": true
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "Indica se há próxima página",
+            "readOnly": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkDto"
+            },
+            "description": "Links de navegação HATEOAS",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Representa um resultado paginado de uma consulta"
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Insira o token JWT no formato: Bearer {seu_token}",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}
