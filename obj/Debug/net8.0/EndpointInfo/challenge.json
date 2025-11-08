@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Challenge",
-    "description": "\n                        ## 🏍️ GEF API - Sistema de Gestão de Pátio Inteligente\n                        \n                        Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas.\n                        \n                        ### Segurança\n                        Esta API utiliza autenticação JWT Bearer Token. Para acessar endpoints protegidos:\n                        1. Obtenha um token através do endpoint de autenticação\n                        2. Clique no botão 'Authorize' acima\n                        3. Insira o token no formato: Bearer {seu_token}\n                    ",
+    "description": "\r\n                        ## 🏍️ GEF API - Sistema de Gestão de Pátio Inteligente\r\n                        \r\n                        Sistema digital inteligente para mapeamento e gestão de pátio de motocicletas.\r\n                        \r\n                        ### Segurança\r\n                        Esta API utiliza autenticação JWT Bearer Token. Para acessar endpoints protegidos:\r\n                        1. Obtenha um token através do endpoint de autenticação\r\n                        2. Clique no botão 'Authorize' acima\r\n                        3. Insira o token no formato: Bearer {seu_token}\r\n                    ",
     "contact": {
       "name": "Gustavo Lazzuri",
       "url": "https://github.com/guLazzuri/challenge-dotnet",

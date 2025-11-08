@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Hq2uiVuxRYg=",
+  "dgSpecHash": "bpGQQPa3fVc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\GUSTAVO\\Downloads\\challenge-dotnet\\challenge.csproj",
+  "projectFilePath": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\challenge.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\GUSTAVO\\.nuget\\packages\\aspnetcore.healthchecks.oracle\\9.0.0\\aspnetcore.healthchecks.oracle.9.0.0.nupkg.sha512",
     "C:\\Users\\GUSTAVO\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
@@ -206,9 +206,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "challenge depende de Oracle.EntityFrameworkCore (>= 8.21.0) mas Oracle.EntityFrameworkCore 8.21.0 não foi encontrado. Oracle.EntityFrameworkCore 8.21.121 foi resolvido.",
-      "projectPath": "C:\\Users\\GUSTAVO\\Downloads\\challenge-dotnet\\challenge.csproj",
+      "projectPath": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\challenge.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\GUSTAVO\\Downloads\\challenge-dotnet\\challenge.csproj",
+      "filePath": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\challenge.csproj",
       "libraryId": "Oracle.EntityFrameworkCore",
       "targetGraphs": [
         "net8.0"

@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\GUSTAVO\\Downloads\\challenge-dotnet\\",
+  "WorkspaceRootPath": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{AC47C704-8221-40A2-8B73-1DEE543F84E0}|challenge.csproj|c:\\users\\gustavo\\downloads\\challenge-dotnet\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "AbsoluteMoniker": "D:0:0:{AC47C704-8221-40A2-8B73-1DEE543F84E0}|challenge.csproj|c:\\users\\gustavo\\documents\\github\\challenge-dotnet\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{AC47C704-8221-40A2-8B73-1DEE543F84E0}|challenge.csproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     }
   ],
@@ -32,13 +32,13 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "README.md",
-              "DocumentMoniker": "C:\\Users\\GUSTAVO\\Downloads\\challenge-dotnet\\README.md",
+              "DocumentMoniker": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\README.md",
               "RelativeDocumentMoniker": "README.md",
-              "ToolTip": "C:\\Users\\GUSTAVO\\Downloads\\challenge-dotnet\\README.md",
+              "ToolTip": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\README.md",
               "RelativeToolTip": "README.md",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAwwFkAAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-11-08T20:18:30.73Z",
+              "WhenOpened": "2025-11-08T22:28:17.728Z",
               "EditorCaption": ""
             }
           ]
@@ -98,16 +98,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 226,
-          "SelectedChildIndex": -1,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
             }
           ]
         }

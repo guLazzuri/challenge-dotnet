@@ -1,12 +1,7 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\GUSTAVO\\Downloads\\challenge-dotnet\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{AC47C704-8221-40A2-8B73-1DEE543F84E0}|challenge.csproj|c:\\users\\gustavo\\downloads\\challenge-dotnet\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
-      "RelativeMoniker": "D:0:0:{AC47C704-8221-40A2-8B73-1DEE543F84E0}|challenge.csproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
-    }
-  ],
+  "WorkspaceRootPath": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\",
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -27,19 +22,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "README.md",
-              "DocumentMoniker": "C:\\Users\\GUSTAVO\\Downloads\\challenge-dotnet\\README.md",
-              "RelativeDocumentMoniker": "README.md",
-              "ToolTip": "C:\\Users\\GUSTAVO\\Downloads\\challenge-dotnet\\README.md",
-              "RelativeToolTip": "README.md",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAwwFkAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-11-08T20:18:30.73Z",
-              "EditorCaption": ""
             }
           ]
         },
