@@ -9502,11 +9502,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\challenge.csproj",
+      "projectUniqueName": "C:\\Users\\GUSTAVO\\Documents\\challenge-dotnet\\challenge.csproj",
       "projectName": "challenge",
-      "projectPath": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\challenge.csproj",
+      "projectPath": "C:\\Users\\GUSTAVO\\Documents\\challenge-dotnet\\challenge.csproj",
       "packagesPath": "C:\\Users\\GUSTAVO\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\GUSTAVO\\Documents\\Github\\challenge-dotnet\\obj\\",
+      "outputPath": "C:\\Users\\GUSTAVO\\Documents\\challenge-dotnet\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
